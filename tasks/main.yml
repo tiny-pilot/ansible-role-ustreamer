@@ -31,6 +31,8 @@
   user:
     name: "{{ ustreamer_user }}"
     group: "{{ ustreamer_group }}"
+    groups:
+      - video
     system: yes
 
 - name: create uStreamer folder
@@ -51,7 +53,7 @@
 
 - name: enable OpenMax IL acceleration on Pi OS
   set_fact:
-    ustreamer_enable_omx: "{{ ansible_architecture.startswith("arm") }}"
+    ustreamer_enable_omx: "{{ ansible_architecture.startswith('arm') }}"
 
 - name: build uStreamer
   make:
@@ -65,10 +67,6 @@
     state: directory
     owner: "{{ ustreamer_user }}"
     group: "{{ ustreamer_group }}"
-
-- name: specify uStreamer encoder
-  set_fact:
-    ustreamer_encoder: "{{ ustreamer_enable_omx | ternary("omx", "HW") }}"
 
 - name: install uStreamer as a service
   template:

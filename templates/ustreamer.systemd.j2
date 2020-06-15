@@ -6,7 +6,40 @@ After=syslog.target network.target
 Type=simple
 User={{ ustreamer_user }}
 WorkingDirectory={{ ustreamer_dir }}
-ExecStart={{ ustreamer_dir }}/ustreamer --device {{ ustreamer_video_path }} --host {{ ustreamer_interface }} --port {{ ustreamer_port }} --encoder {{ ustreamer_encoder }} --format {{ ustreamer_format }} --workers {{ ustreamer_workers }} {{ ustreamer_persistent | ternary("--persistent", "")}} {{ ustreamer_dv_timings | ternary("--dv-timings", "") }} --drop-same-frames {{ ustreamer_drop_same_frames }}
+ExecStart={{ ustreamer_dir }}/ustreamer \
+{% if ustreamer_video_path %}
+  --device {{ ustreamer_video_path }} \
+{% endif %}
+{% if ustreamer_interface %}
+  --host {{ ustreamer_interface }} \
+{% endif %}
+{% if ustreamer_port %}
+  --port {{ ustreamer_port }} \
+{% endif %}
+{% if ustreamer_encoder %}
+  --encoder {{ ustreamer_encoder }} \
+{% endif %}
+{% if ustreamer_format %}
+  --format {{ ustreamer_format }} \
+{% endif %}
+{% if ustreamer_desired_fps %}
+  --desired-fps {{ ustreamer_desired_fps }} \
+{% endif %}
+{% if ustreamer_resolution %}
+  --resolution {{ ustreamer_resolution }} \
+{% endif %}
+{% if ustreamer_workers %}
+  --workers {{ ustreamer_workers }} \
+{% endif %}
+{% if ustreamer_drop_same_frames %}
+  --drop-same-frames {{ ustreamer_drop_same_frames }} \
+{% endif %}
+{% if ustreamer_persistent %}
+  --persistent \
+{% endif %}
+{% if ustreamer_use_dv_timings %}
+  --dv-timings
+{% endif %}
 Restart=on-abort
 
 [Install]
