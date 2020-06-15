@@ -8,12 +8,12 @@
 
 - name: collect Raspberry Pi OS specific required apt packages
   set_fact:
-    ustreamer_packages: "{{ ustreamer_packages }}" + ['libjpeg8-dev']
+    ustreamer_packages: "{{ ustreamer_packages }} + ['libjpeg8-dev']"
   when: ansible_architecture.startswith("arm")
 
 - name: collect Debian-specific required apt packages
   set_fact:
-    ustreamer_packages: "{{ ustreamer_packages }}" + ['build-essential', 'libjpeg62-turbo-dev']
+    ustreamer_packages: "{{ ustreamer_packages }} + ['build-essential', 'libjpeg62-turbo-dev']"
   when: not ansible_architecture.startswith("arm")
 
 - name: install uStreamer pre-requisite packages
