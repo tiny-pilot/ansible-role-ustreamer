@@ -1,0 +1,76 @@
+---
+- name: collect universal required apt packages
+  set_fact:
+    ustreamer_packages:
+      - libevent-dev
+      - uuid-dev
+      - libbsd-dev
+
+- name: collect Raspberry Pi OS specific required apt packages
+  set_fact:
+    ustreamer_packages: "{{ ustreamer_packages }}" + ['libjpeg8-dev']
+  when: ansible_architecture.startswith("arm")
+
+- name: collect Debian-specific required apt packages
+  set_fact:
+    ustreamer_packages: "{{ ustreamer_packages }}" + ['build-essential', 'libjpeg62-turbo-dev']
+  when: not ansible_architecture.startswith("arm")
+
+- name: install uStreamer pre-requisite packages
+  apt:
+    name: "{{ ustreamer_packages }}"
+    state: present
+
+- name: create ustreamer group
+  group:
+    name: "{{ ustreamer_group }}"
+    state: present
+
+- name: create ustreamer user
+  user:
+    name: "{{ ustreamer_user }}"
+    group: "{{ ustreamer_group }}"
+    system: yes
+
+- name: create uStreamer folder
+  file:
+    path: "{{ ustreamer_dir }}"
+    state: directory
+    owner: "{{ ustreamer_user }}"
+    group: "{{ ustreamer_group }}"
+
+- name: get uStreamer repo
+  git:
+    repo: "{{ ustreamer_repo }}"
+    dest: "{{ ustreamer_dir }}"
+    version: master
+    accept_hostkey: yes
+  notify:
+    - restart uStreamer
+
+- name: build uStreamer
+  make:
+    chdir: "{{ ustreamer_dir }}"
+
+- name: fix uStreamer folder permissions
+  file:
+    path: "{{ ustreamer_dir }}"
+    state: directory
+    owner: "{{ ustreamer_user }}"
+    group: "{{ ustreamer_group }}"
+
+- name: install uStreamer as a service
+  template:
+    src: ustreamer.systemd.j2
+    dest: /lib/systemd/system/ustreamer.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - reload uStreamer systemd config
+    - restart uStreamer
+
+- name: enable systemd uStreamer service file
+  systemd:
+    name: ustreamer
+    enabled: yes

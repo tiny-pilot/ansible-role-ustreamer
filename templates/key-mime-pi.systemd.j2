@@ -1,0 +1,13 @@
+[Unit]
+Description=uStreamer - Lightweight, optimized video encoder
+After=syslog.target network.target
+
+[Service]
+Type=simple
+User={{ ustreamer_user }}
+WorkingDirectory={{ ustreamer_dir }}
+ExecStart={{ ustreamer_dir }}/ustreamer --device {{ ustreamer_video_path }} --host {{ ustreamer_interface }} --port {{ ustreamer_port }}
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
