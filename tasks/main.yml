@@ -2,6 +2,7 @@
 - name: collect universal required apt packages
   set_fact:
     ustreamer_packages:
+      - git
       - libevent-dev
       - uuid-dev
       - libbsd-dev
