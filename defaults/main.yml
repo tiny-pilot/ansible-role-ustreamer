@@ -9,6 +9,7 @@ ustreamer_video_path: null
 ustreamer_encoder: null
 ustreamer_format: null
 ustreamer_resolution: null
+ustreamer_desired_fps: null
 ustreamer_workers: null
 ustreamer_persistent: null
 ustreamer_use_dv_timings: null
