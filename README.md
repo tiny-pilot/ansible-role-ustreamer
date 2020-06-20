@@ -4,6 +4,8 @@
 
 Ansible role for [µStreamer](https://github.com/pikvm/ustreamer).
 
+Compiles µStreamer from source and installs it as a systemd service.
+
 ## Role Variables
 
 Available variables are listed below, along with default values (see [defaults/main.yml](defaults/main.yml)):
@@ -13,10 +15,10 @@ ustreamer_group: ustreamer
 ustreamer_user: ustreamer
 ustreamer_dir: /opt/ustreamer
 ustreamer_repo: https://github.com/pikvm/ustreamer.git
-ustreamer_interface: '0.0.0.0'
-ustreamer_port: 8001
-ustreamer_video_path: /dev/video0
+ustreamer_repo_version: master
 ```
+
+For a full list of options, see [defaults/main.yml](https://github.com/mtlynch/ansible-role-ustreamer/blob/master/defaults/main.yml).
 
 ## Dependencies
 

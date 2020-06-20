@@ -46,8 +46,7 @@
   git:
     repo: "{{ ustreamer_repo }}"
     dest: "{{ ustreamer_dir }}"
-    version: master
-    accept_hostkey: yes
+    version: "{{ ustreamer_repo_version }}"
   notify:
     - restart uStreamer
 
