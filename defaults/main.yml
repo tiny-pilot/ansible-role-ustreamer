@@ -3,14 +3,38 @@ ustreamer_group: ustreamer
 ustreamer_user: ustreamer
 ustreamer_dir: /opt/ustreamer
 ustreamer_repo: https://github.com/pikvm/ustreamer.git
+ustreamer_repo_version: master
+
+# Network interface to listen for connections.
 ustreamer_interface: null
+
+# Port to listen for connections.
 ustreamer_port: null
+
+# Path to video device, such as /dev/video1.
 ustreamer_video_path: null
+
+# Encoding method to use, such as omx.
 ustreamer_encoder: null
+
+# Device input format, such as uyvy .
 ustreamer_format: null
+
+# Stream resolution, such as 1280x720.
 ustreamer_resolution: null
+
+# Desired frames per second.
 ustreamer_desired_fps: null
+
+# Number of workers.
 ustreamer_workers: null
+
+# Don't re-initialize device on timeout (for example when HDMI cable
+# was disconnected). Can be either true or false.
 ustreamer_persistent: null
+
+# Use DV-timings.
 ustreamer_use_dv_timings: null
+
+# Number of same frames to drop.
 ustreamer_drop_same_frames: null
