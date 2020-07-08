@@ -52,7 +52,7 @@
 
 - name: enable OpenMax IL acceleration on Pi OS
   set_fact:
-    ustreamer_enable_omx: "{{ ansible_architecture.startswith('arm') }}"
+    ustreamer_enable_omx: "{{ ansible_architecture.startswith('arm') and ustreamer_encoder.lower() == 'omx' }}"
 
 - name: build uStreamer
   make:
