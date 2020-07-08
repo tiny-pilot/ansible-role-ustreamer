@@ -38,8 +38,9 @@ ExecStart={{ ustreamer_dir }}/ustreamer \
   --persistent \
 {% endif %}
 {% if ustreamer_use_dv_timings %}
-  --dv-timings
+  --dv-timings \
 {% endif %}
+
 Restart=on-abort
 
 [Install]
