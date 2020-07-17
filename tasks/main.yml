@@ -47,8 +47,15 @@
     repo: "{{ ustreamer_repo }}"
     dest: "{{ ustreamer_dir }}"
     version: "{{ ustreamer_repo_version }}"
+  register: ustreamer_repo_result
   notify:
     - restart uStreamer
+
+- name: clean repository if needed
+  make:
+    chdir: "{{ ustreamer_dir }}"
+    target: clean
+  when: ustreamer_repo_result.changed
 
 - name: enable OpenMax IL acceleration on Pi OS
   set_fact:
