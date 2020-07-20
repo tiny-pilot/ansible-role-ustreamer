@@ -2,6 +2,9 @@
 - name: Converge
   hosts: all
   tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: true
     - name: "Include ansible-role-ustreamer"
       include_role:
         name: "ansible-role-ustreamer"
