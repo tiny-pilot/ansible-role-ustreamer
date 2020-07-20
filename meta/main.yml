@@ -11,6 +11,9 @@
       - name: Debian
         versions:
           - buster
+      - name: Ubuntu
+        versions:
+          - bionic
 
     galaxy_tags:
       - raspberrypi
