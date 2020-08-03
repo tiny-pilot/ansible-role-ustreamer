@@ -10,12 +10,14 @@
 - name: collect Raspberry Pi OS specific required apt packages
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libjpeg8-dev']"
+  # TODO: Check Raspbian OS instead because distros like DietPi are ARM but not Raspbian.
   when: ansible_architecture.startswith("arm")
 
 - name: collect Debian-specific required apt packages
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['build-essential', 'libjpeg62-turbo-dev']"
-  when: ansible_distribution == 'Debian' and not ansible_architecture.startswith("arm")
+  # TODO: Make sure this is Debian but not Raspbian.
+  when: ansible_distribution == 'Debian'
 
 - name: collect Ubuntu-specific required apt packages
   set_fact:
