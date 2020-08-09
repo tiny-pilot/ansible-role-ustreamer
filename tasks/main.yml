@@ -78,6 +78,9 @@
     state: directory
     owner: "{{ ustreamer_user }}"
     group: "{{ ustreamer_group }}"
+    recurse: yes
+  # TODO: Figure out why this fails idempotency otherwise.
+  changed_when: false
 
 - name: install uStreamer as a service
   template:
