@@ -78,6 +78,7 @@
     state: directory
     owner: "{{ ustreamer_user }}"
     group: "{{ ustreamer_group }}"
+    recurse: yes
 
 - name: install uStreamer as a service
   template:
