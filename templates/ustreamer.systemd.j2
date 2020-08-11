@@ -40,6 +40,9 @@ ExecStart={{ ustreamer_dir }}/ustreamer \
 {% if ustreamer_use_dv_timings %}
   --dv-timings \
 {% endif %}
+{% if ustreamer_tcp_nodelay %}
+  --tcp-nodelay \
+{% endif %}
 
 Restart=on-abort
 

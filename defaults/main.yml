@@ -38,3 +38,6 @@ ustreamer_use_dv_timings: null
 
 # Number of same frames to drop.
 ustreamer_drop_same_frames: null
+
+# Set TCP_NODELAY to reduce buffering on video stream.
+ustreamer_tcp_nodelay: null
