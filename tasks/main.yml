@@ -39,6 +39,7 @@
     groups:
       - video
     system: yes
+    create_home: no
 
 - name: create uStreamer folder
   file:
