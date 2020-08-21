@@ -44,7 +44,7 @@ ExecStart={{ ustreamer_dir }}/ustreamer \
   --tcp-nodelay \
 {% endif %}
 
-Restart=on-abort
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
