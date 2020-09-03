@@ -1,4 +1,8 @@
 ---
+- name: enable OpenMax IL acceleration on Pi OS
+  set_fact:
+    ustreamer_enable_omx: "{{ ansible_architecture.startswith('arm') and ustreamer_encoder.lower() == 'omx' }}"
+
 - name: collect universal required apt packages
   set_fact:
     ustreamer_packages:
@@ -11,6 +15,11 @@
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libjpeg8-dev']"
   when: ansible_architecture.startswith("arm")
+
+- name: install libraspberrypi-dev if we're using OpenMax IL acceleration
+  set_fact:
+    ustreamer_packages: "{{ ustreamer_packages }} + ['libraspberrypi-dev']"
+  when: ustreamer_enable_omx
 
 - name: collect Debian-specific required apt packages
   set_fact:
@@ -62,10 +71,6 @@
     chdir: "{{ ustreamer_dir }}"
     target: clean
   when: ustreamer_repo_result.changed
-
-- name: enable OpenMax IL acceleration on Pi OS
-  set_fact:
-    ustreamer_enable_omx: "{{ ansible_architecture.startswith('arm') and ustreamer_encoder.lower() == 'omx' }}"
 
 - name: build uStreamer
   make:
