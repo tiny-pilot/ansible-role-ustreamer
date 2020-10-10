@@ -6,6 +6,7 @@
 - name: collect universal required apt packages
   set_fact:
     ustreamer_packages:
+      - build-essential
       - git
       - libevent-dev
       - uuid-dev
