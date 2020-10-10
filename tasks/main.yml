@@ -6,6 +6,7 @@
 - name: collect universal required apt packages
   set_fact:
     ustreamer_packages:
+      - build-essential
       - git
       - libevent-dev
       - uuid-dev
@@ -23,12 +24,12 @@
 
 - name: collect Debian-specific required apt packages
   set_fact:
-    ustreamer_packages: "{{ ustreamer_packages }} + ['build-essential', 'libjpeg62-turbo-dev']"
+    ustreamer_packages: "{{ ustreamer_packages }} + ['libjpeg62-turbo-dev']"
   when: ansible_distribution == 'Debian' and not ansible_architecture.startswith("arm")
 
 - name: collect Ubuntu-specific required apt packages
   set_fact:
-    ustreamer_packages: "{{ ustreamer_packages }} + ['build-essential', 'libjpeg62-dev']"
+    ustreamer_packages: "{{ ustreamer_packages }} + ['libjpeg62-dev']"
   when: ansible_distribution == 'Ubuntu' and not ansible_architecture.startswith("arm")
 
 - name: install uStreamer pre-requisite packages
