@@ -1,7 +1,11 @@
 ---
+- name: configure TC358743 HDMI capture chip
+  import_tasks: provision_tc358743.yml
+  when: ustreamer_use_tc358743_device
+
 - name: enable OpenMax IL acceleration on Pi OS
   set_fact:
-    ustreamer_enable_omx: "{{ ansible_architecture.startswith('arm') and ustreamer_encoder.lower() == 'omx' }}"
+    ustreamer_enable_omx: "{{ ansible_architecture.startswith('arm') and ustreamer_encoder != None and ustreamer_encoder.lower() == 'omx' }}"
 
 - name: collect universal required apt packages
   set_fact:
@@ -72,6 +76,8 @@
     chdir: "{{ ustreamer_dir }}"
     target: clean
   when: ustreamer_repo_result.changed
+
+# TODO: Make clean if build circumstances have changed
 
 - name: build uStreamer
   make:

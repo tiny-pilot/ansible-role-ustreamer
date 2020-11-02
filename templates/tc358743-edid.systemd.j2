@@ -1,0 +1,13 @@
+[Unit]
+Description=Load EDID for TC358743 HDMI capture chip.
+After=syslog.target
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=v4l2-ctl \
+  --set-edid=file={{ ustreamer_edids_dir }}/tc358743-edid.hex \
+  --fix-edid-checksums
+
+[Install]
+WantedBy=local-fs.target
