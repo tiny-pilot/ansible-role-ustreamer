@@ -47,3 +47,6 @@ ustreamer_use_tc358743_device: no
 
 # Location to store EDID files.
 ustreamer_edids_dir: /opt/edids
+
+# Location to store metadata about the uStreamer installation.
+ustreamer_meta_dir: /opt/ustreamer-meta

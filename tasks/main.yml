@@ -71,19 +71,27 @@
   notify:
     - restart uStreamer
 
+- name: cache build settings (pre-build)
+  import_tasks: cache-build-settings.yml
+
 - name: clean repository if needed
   make:
     chdir: "{{ ustreamer_dir }}"
     target: clean
-  when: ustreamer_repo_result.changed
-
-# TODO: Make clean if build circumstances have changed
+  when: ustreamer_repo_result.changed or ustreamer_build_settings_changed
 
 - name: build uStreamer
   make:
     chdir: "{{ ustreamer_dir }}"
     params:
       WITH_OMX: "{{ ustreamer_enable_omx | int }}"
+
+# Note: It's hacky to have to re-save this, but the ustreamer "make clean"
+# wipes out our metadata file. We could perhaps submit a PR to uStreamer
+# that either automatically rebuilds when relevant settings change or add
+# a path to the .gitignore that "make clean" won't destroy.
+- name: cache build settings (post-build)
+  import_tasks: cache-build-settings.yml
 
 - name: fix uStreamer folder permissions
   file:

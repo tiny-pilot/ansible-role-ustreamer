@@ -21,13 +21,13 @@
     owner: root
     group: root
     mode: '0644'
+  notify:
+    - load TC358743 EDID file
 
 - name: enable systemd tc358743 initializer service file
   systemd:
     name: tc358743-edid
     enabled: yes
-
-# Run the service once manually
 
 - name: use custom settings for TC358743 chip for any facts not already defined
   set_fact:

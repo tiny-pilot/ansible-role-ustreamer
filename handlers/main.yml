@@ -8,3 +8,8 @@
   service:
     name: ustreamer
     state: restarted
+
+- name: load TC358743 EDID file
+  service:
+    name: tc358743-edid
+    state: started
