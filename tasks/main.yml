@@ -19,7 +19,7 @@
   register: tc358743_file_result
 
 # If the ustreamer_use_tc358743_device variable is set, use that. Otherwise,
-# default treat it as TC358743 if the configuration file exists.
+# treat it as TC358743 if the configuration file exists.
 - name: check whether to configure uStreamer for TC358743
   set_fact:
     ustreamer_configure_tc358743_device: "{{ ustreamer_use_tc358743_device if ustreamer_use_tc358743_device != None else tc358743_file_result.stat.exists }}"
@@ -87,8 +87,8 @@
     - restart uStreamer
 
 # We don't actually need this file for anything. It's just a canary to keep
-# track of when we need to clean the build because of a change since the
-# last build.
+# track of when we need to clean the build because of a change since the last
+# build.
 - name: cache build settings
   template:
     src: build-settings.j2
