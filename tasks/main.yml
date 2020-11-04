@@ -87,8 +87,8 @@
     - restart uStreamer
 
 # We don't actually need this file for anything. It's just a canary to keep
-# track of when we need to clean the build because of a change since the last
-# build.
+# track of when we need to clean the build because of a change in build options
+# since the last compilation.
 - name: cache build settings
   template:
     src: build-settings.j2
