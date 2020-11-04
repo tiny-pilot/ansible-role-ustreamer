@@ -1,7 +1,40 @@
 ---
+- name: create ustreamer group
+  group:
+    name: "{{ ustreamer_group }}"
+    state: present
+
+- name: create ustreamer user
+  user:
+    name: "{{ ustreamer_user }}"
+    group: "{{ ustreamer_group }}"
+    groups:
+      - video
+    system: yes
+    create_home: yes
+
+- name: Check whether this machine was previously configured for a TC358743 HDMI capture chip
+  stat:
+    path: "{{ ustreamer_tc358743_file }}"
+  register: tc358743_file_result
+
+# If the ustreamer_use_tc358743_device variable is set, use that. Otherwise,
+# treat it as TC358743 if the configuration file exists.
+- name: check whether to configure uStreamer for TC358743
+  set_fact:
+    ustreamer_configure_tc358743_device: "{{ ustreamer_use_tc358743_device if ustreamer_use_tc358743_device != None else tc358743_file_result.stat.exists }}"
+
+- name: configure TC358743 HDMI capture chip
+  import_tasks: provision_tc358743.yml
+  when: ustreamer_configure_tc358743_device | bool
+
+- name: uninstall TC358743 settings if they're not in use
+  import_tasks: remove_tc358743.yml
+  when: not ustreamer_configure_tc358743_device
+
 - name: enable OpenMax IL acceleration on Pi OS
   set_fact:
-    ustreamer_enable_omx: "{{ ansible_architecture.startswith('arm') and ustreamer_encoder.lower() == 'omx' }}"
+    ustreamer_enable_omx: "{{ ansible_architecture.startswith('arm') and ustreamer_encoder != None and ustreamer_encoder.lower() == 'omx' }}"
 
 - name: collect universal required apt packages
   set_fact:
@@ -37,20 +70,6 @@
     name: "{{ ustreamer_packages }}"
     state: present
 
-- name: create ustreamer group
-  group:
-    name: "{{ ustreamer_group }}"
-    state: present
-
-- name: create ustreamer user
-  user:
-    name: "{{ ustreamer_user }}"
-    group: "{{ ustreamer_group }}"
-    groups:
-      - video
-    system: yes
-    create_home: no
-
 - name: create uStreamer folder
   file:
     path: "{{ ustreamer_dir }}"
@@ -67,11 +86,23 @@
   notify:
     - restart uStreamer
 
+# We don't actually need this file for anything. It's just a canary to keep
+# track of when we need to clean the build because of a change in build options
+# since the last compilation.
+- name: cache build settings
+  template:
+    src: build-settings.j2
+    dest: "/home/{{ ustreamer_user }}/build-settings.cache"
+    owner: "{{ ustreamer_user }}"
+    group: "{{ ustreamer_group }}"
+    mode: '0644'
+  register: ustreamer_cache_build_settings_result
+
 - name: clean repository if needed
   make:
     chdir: "{{ ustreamer_dir }}"
     target: clean
-  when: ustreamer_repo_result.changed
+  when: ustreamer_repo_result.changed or ustreamer_cache_build_settings_result.changed
 
 - name: build uStreamer
   make:
@@ -97,7 +128,7 @@
     group: root
     mode: '0644'
   notify:
-    - reload uStreamer systemd config
+    - reload systemd config
     - restart uStreamer
 
 - name: enable systemd uStreamer service file

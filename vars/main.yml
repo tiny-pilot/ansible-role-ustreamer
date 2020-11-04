@@ -1,0 +1,3 @@
+# Path to file whose existence indicates that Ansible previously configured
+# this instance to use the TC358743 HDMI capture chip.
+ustreamer_tc358743_file: /home/{{ ustreamer_user }}/use-tc358743

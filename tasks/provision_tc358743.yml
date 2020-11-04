@@ -1,0 +1,53 @@
+---
+- name: create EDIDs folder
+  file:
+    path: "{{ ustreamer_edids_dir }}"
+    state: directory
+    owner: root
+    group: root
+
+- name: copy TC358743 EDID file
+  copy:
+    src: tc358743-edid.hex
+    dest: "{{ ustreamer_edids_dir }}"
+    owner: "{{ ustreamer_user }}"
+    group: "{{ ustreamer_group }}"
+    mode: '0644'
+
+- name: install TC358743 initializer service
+  template:
+    src: load-tc358743-edid.systemd.j2
+    dest: /lib/systemd/system/load-tc358743-edid.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - reload systemd config
+    - load TC358743 EDID file
+
+- name: enable TC358743 EDID service config
+  systemd:
+    name: load-tc358743-edid
+    enabled: yes
+
+- name: use custom settings for TC358743 chip for any facts not already defined
+  set_fact:
+    ustreamer_encoder: "{{ 'omx' if ustreamer_encoder == None else ustreamer_encoder }}"
+    ustreamer_format: "{{ 'uyvy' if ustreamer_format == None else ustreamer_format }}"
+    ustreamer_workers: "{{ 3 if ustreamer_workers == None else ustreamer_workers }}"
+    ustreamer_persistent: "{{ True if ustreamer_persistent == None else ustreamer_persistent }}"
+    ustreamer_use_dv_timings: "{{ True if ustreamer_use_dv_timings == None else ustreamer_use_dv_timings }}"
+    ustreamer_drop_same_frames: "{{ 30 if ustreamer_drop_same_frames == None else ustreamer_drop_same_frames }}"
+
+- name: Check whether this machine was previously configured for a TC358743 HDMI capture chip
+  stat:
+    path: "{{ ustreamer_tc358743_file }}"
+  register: tc358743_file_result
+
+- name: ensure file exists indicating that this instance was configured for TC358743
+  file:
+    path: "{{ ustreamer_tc358743_file }}"
+    state: touch
+    owner: root
+    group: root
+  when: not tc358743_file_result.stat.exists
