@@ -22,12 +22,8 @@
     group: root
     mode: '0644'
   notify:
+    - reload TC358743 EDID service config
     - load TC358743 EDID file
-
-- name: enable systemd tc358743 initializer service file
-  systemd:
-    name: tc358743-edid
-    enabled: yes
 
 - name: use custom settings for TC358743 chip for any facts not already defined
   set_fact:
@@ -37,3 +33,16 @@
     ustreamer_persistent: "{{ True if ustreamer_persistent == None else ustreamer_persistent }}"
     ustreamer_use_dv_timings: "{{ True if ustreamer_use_dv_timings == None else ustreamer_use_dv_timings }}"
     ustreamer_drop_same_frames: "{{ 30 if ustreamer_drop_same_frames == None else ustreamer_drop_same_frames }}"
+
+- name: Check whether this machine was previously configured for a TC358743 HDMI capture chip
+  stat:
+    path: "{{ ustreamer_tc358743_file }}"
+  register: tc358743_file_result
+
+- name: ensure file exists indicating that this instance was configured for TC358743
+  file:
+    path: "{{ ustreamer_tc358743_file }}"
+    state: touch
+    owner: root
+    group: root
+  when: not tc358743_file_result.stat.exists

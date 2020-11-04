@@ -43,7 +43,7 @@ ustreamer_drop_same_frames: null
 ustreamer_tcp_nodelay: null
 
 # Whether to use settings for a TC358743 HDMI capture device.
-ustreamer_use_tc358743_device: no
+ustreamer_use_tc358743_device: null
 
 # Location to store EDID files.
 ustreamer_edids_dir: /opt/edids

@@ -1,7 +1,36 @@
 ---
+- name: create ustreamer group
+  group:
+    name: "{{ ustreamer_group }}"
+    state: present
+
+- name: create ustreamer user
+  user:
+    name: "{{ ustreamer_user }}"
+    group: "{{ ustreamer_group }}"
+    groups:
+      - video
+    system: yes
+    create_home: yes
+
+- name: Check whether this machine was previously configured for a TC358743 HDMI capture chip
+  stat:
+    path: "{{ ustreamer_tc358743_file }}"
+  register: tc358743_file_result
+
+# If the ustreamer_use_tc358743_device variable is set, use that. Otherwise,
+# default treat it as TC358743 if the configuration file exists.
+- name: enable OpenMax IL acceleration on Pi OS
+  set_fact:
+    ustreamer_configure_tc358743_device: ustreamer_use_tc358743_device if ustreamer_use_tc358743_device != None else tc358743_file_result.stat.exists
+
 - name: configure TC358743 HDMI capture chip
   import_tasks: provision_tc358743.yml
   when: ustreamer_use_tc358743_device
+
+- name: uninstall TC358743 settings if they're not in use
+  import_tasks: remove_tc358743.yml
+  when: not ustreamer_use_tc358743_device
 
 - name: enable OpenMax IL acceleration on Pi OS
   set_fact:
@@ -41,20 +70,6 @@
     name: "{{ ustreamer_packages }}"
     state: present
 
-- name: create ustreamer group
-  group:
-    name: "{{ ustreamer_group }}"
-    state: present
-
-- name: create ustreamer user
-  user:
-    name: "{{ ustreamer_user }}"
-    group: "{{ ustreamer_group }}"
-    groups:
-      - video
-    system: yes
-    create_home: no
-
 - name: create uStreamer folder
   file:
     path: "{{ ustreamer_dir }}"
@@ -71,27 +86,29 @@
   notify:
     - restart uStreamer
 
-- name: cache build settings (pre-build)
-  import_tasks: cache-build-settings.yml
+# We don't actually need this file for anything. It's just a canary to keep
+# track of when we need to clean the build because of a change since the
+# last build.
+- name: cache build settings
+  template:
+    src: build-settings.j2
+    dest: "/home/{{ ustreamer_user }}/build-settings.cache"
+    owner: "{{ ustreamer_user }}"
+    group: "{{ ustreamer_group }}"
+    mode: '0644'
+  register: ustreamer_cache_build_settings_result
 
 - name: clean repository if needed
   make:
     chdir: "{{ ustreamer_dir }}"
     target: clean
-  when: ustreamer_repo_result.changed or ustreamer_build_settings_changed
+  when: ustreamer_repo_result.changed or ustreamer_cache_build_settings_result.changed
 
 - name: build uStreamer
   make:
     chdir: "{{ ustreamer_dir }}"
     params:
       WITH_OMX: "{{ ustreamer_enable_omx | int }}"
-
-# Note: It's hacky to have to re-save this, but the ustreamer "make clean"
-# wipes out our metadata file. We could perhaps submit a PR to uStreamer
-# that either automatically rebuilds when relevant settings change or add
-# a path to the .gitignore that "make clean" won't destroy.
-- name: cache build settings (post-build)
-  import_tasks: cache-build-settings.yml
 
 - name: fix uStreamer folder permissions
   file:
