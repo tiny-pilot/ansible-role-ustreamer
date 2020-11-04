@@ -51,4 +51,3 @@
     owner: root
     group: root
   when: not tc358743_file_result.stat.exists
-  
