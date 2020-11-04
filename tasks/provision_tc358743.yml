@@ -16,8 +16,8 @@
 
 - name: install TC358743 initializer service
   template:
-    src: tc358743-edid.systemd.j2
-    dest: /lib/systemd/system/tc358743-edid.service
+    src: load-tc358743-edid.systemd.j2
+    dest: /lib/systemd/system/load-tc358743-edid.service
     owner: root
     group: root
     mode: '0644'
@@ -27,7 +27,7 @@
 
 - name: enable TC358743 EDID service config
   systemd:
-    name: tc358743-edid
+    name: load-tc358743-edid
     enabled: yes
 
 - name: use custom settings for TC358743 chip for any facts not already defined

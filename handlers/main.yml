@@ -10,5 +10,5 @@
 
 - name: load TC358743 EDID file
   service:
-    name: tc358743-edid
+    name: load-tc358743-edid
     state: started
