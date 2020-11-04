@@ -25,6 +25,11 @@
     - reload systemd config
     - load TC358743 EDID file
 
+- name: enable TC358743 EDID service config
+  systemd:
+    name: tc358743-edid
+    enabled: yes
+
 - name: use custom settings for TC358743 chip for any facts not already defined
   set_fact:
     ustreamer_encoder: "{{ 'omx' if ustreamer_encoder == None else ustreamer_encoder }}"

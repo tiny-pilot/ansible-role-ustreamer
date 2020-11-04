@@ -8,11 +8,6 @@
     name: ustreamer
     state: restarted
 
-- name: enable TC358743 EDID service config
-  systemd:
-    name: tc358743-edid
-    enabled: yes
-
 - name: load TC358743 EDID file
   service:
     name: tc358743-edid
