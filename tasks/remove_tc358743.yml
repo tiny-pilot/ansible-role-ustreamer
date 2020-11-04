@@ -8,9 +8,5 @@
   file:
     path: /lib/systemd/system/tc358743-edid.service
     state: absent
-
-- name: uninstall systemd tc358743 initializer service file
-  systemd:
-    name: tc358743-edid
-    enabled: no
-    daemon-reload: yes
+  notify:
+    - reload systemd config

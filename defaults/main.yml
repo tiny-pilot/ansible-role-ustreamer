@@ -46,4 +46,4 @@ ustreamer_tcp_nodelay: null
 ustreamer_use_tc358743_device: null
 
 # Location to store EDID files.
-ustreamer_edids_dir: /opt/edids
+ustreamer_edids_dir: /home/{{ ustreamer_user }}/edids

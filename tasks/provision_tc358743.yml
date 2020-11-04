@@ -22,7 +22,7 @@
     group: root
     mode: '0644'
   notify:
-    - reload TC358743 EDID service config
+    - reload systemd config
     - load TC358743 EDID file
 
 - name: use custom settings for TC358743 chip for any facts not already defined

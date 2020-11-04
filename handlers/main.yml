@@ -1,7 +1,6 @@
 ---
-- name: reload uStreamer systemd config
+- name: reload systemd config
   systemd:
-    name: ustreamer
     daemon_reload: yes
 
 - name: restart uStreamer
@@ -9,11 +8,10 @@
     name: ustreamer
     state: restarted
 
-- name: reload TC358743 EDID service config
+- name: enable TC358743 EDID service config
   systemd:
     name: tc358743-edid
     enabled: yes
-    daemon_reload: yes
 
 - name: load TC358743 EDID file
   service:
