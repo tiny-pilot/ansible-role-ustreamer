@@ -1,4 +1,11 @@
 ---
+- name: enable TC358743 overlay in /boot/config.txt
+  lineinfile:
+    path: /boot/config.txt
+    line: "dtoverlay=tc358743"
+    insertafter: EOF
+  when: boot_config_exists | bool
+
 - name: create EDIDs folder
   file:
     path: "{{ ustreamer_edids_dir }}"
@@ -39,7 +46,7 @@
     ustreamer_use_dv_timings: "{{ True if ustreamer_use_dv_timings == None else ustreamer_use_dv_timings }}"
     ustreamer_drop_same_frames: "{{ 30 if ustreamer_drop_same_frames == None else ustreamer_drop_same_frames }}"
 
-- name: Check whether this machine was previously configured for a TC358743 HDMI capture chip
+- name: check whether this machine was previously configured for a TC358743 HDMI capture chip
   stat:
     path: "{{ ustreamer_tc358743_file }}"
   register: tc358743_file_result
