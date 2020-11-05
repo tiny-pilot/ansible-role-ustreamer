@@ -31,11 +31,7 @@
   notify:
     - reload systemd config
     - load TC358743 EDID file
-
-- name: enable TC358743 EDID service config
-  systemd:
-    name: load-tc358743-edid
-    enabled: yes
+    - configure TC358743 EDID loader to run at boot
 
 - name: use custom settings for TC358743 chip for any facts not already defined
   set_fact:

@@ -15,3 +15,8 @@
   # If the TC358743 is not yet attached, for example, when pre-provisioning an
   # image, this will fail, but we can ignore it.
   ignore_errors: yes
+
+- name: configure TC358743 EDID loader to run at boot
+  systemd:
+    name: load-tc358743-edid
+    enabled: yes
