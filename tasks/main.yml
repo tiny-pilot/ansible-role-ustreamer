@@ -13,6 +13,15 @@
     system: yes
     create_home: yes
 
+- name: check for a boot config file
+  stat:
+    path: /boot/config.txt
+  register: boot_config_result
+
+- name: save whether boot config file exists
+  set_fact:
+    boot_config_exists: "{{ boot_config_result.stat.exists }}"
+
 - name: Check whether this machine was previously configured for a TC358743 HDMI capture chip
   stat:
     path: "{{ ustreamer_tc358743_file }}"

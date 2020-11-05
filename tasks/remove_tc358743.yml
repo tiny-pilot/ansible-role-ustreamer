@@ -10,3 +10,10 @@
     state: absent
   notify:
     - reload systemd config
+
+- name: disable TC358743 overlay in /boot/config.txt
+  lineinfile:
+    path: /boot/config.txt
+    line: "dtoverlay=tc358743"
+    state: absent
+  when: boot_config_exists | bool
