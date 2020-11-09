@@ -41,16 +41,3 @@
     ustreamer_persistent: "{{ True if ustreamer_persistent == None else ustreamer_persistent }}"
     ustreamer_use_dv_timings: "{{ True if ustreamer_use_dv_timings == None else ustreamer_use_dv_timings }}"
     ustreamer_drop_same_frames: "{{ 30 if ustreamer_drop_same_frames == None else ustreamer_drop_same_frames }}"
-
-- name: check whether this machine was previously configured for a TC358743 HDMI capture chip
-  stat:
-    path: "{{ ustreamer_tc358743_file }}"
-  register: tc358743_file_result
-
-- name: ensure file exists indicating that this instance was configured for TC358743
-  file:
-    path: "{{ ustreamer_tc358743_file }}"
-    state: touch
-    owner: root
-    group: root
-  when: not tc358743_file_result.stat.exists
