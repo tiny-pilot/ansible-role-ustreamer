@@ -42,8 +42,11 @@ ustreamer_drop_same_frames: null
 # Set TCP_NODELAY to reduce buffering on video stream.
 ustreamer_tcp_nodelay: null
 
-# Whether to use settings for a TC358743 HDMI capture device.
-ustreamer_use_tc358743_device: null
+# Presets to use for the video capture device.
+# Options are:
+#   * uvc - For a device that appears as a regular UVC video source.
+#   * tc358743 - For HDMI to CSI devices based on the Toshiba TC358743 chip.
+ustreamer_capture_device: null
 
 # Location to store EDID files.
 ustreamer_edids_dir: /home/{{ ustreamer_user }}/edids
