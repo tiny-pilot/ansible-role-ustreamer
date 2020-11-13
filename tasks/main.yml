@@ -127,6 +127,16 @@
   # TODO: Figure out why this fails idempotency otherwise.
   changed_when: false
 
+  # When using the OMX encoder, changes to the clock while uStreamer is running
+  # will break the encoder, so we need the systemd-time-wait-sync to tell us
+  # when time sync has completed.
+  # See: https://github.com/pikvm/ustreamer/issues/56
+- name: enable systemd-time-wait-sync service
+  systemd:
+    name: systemd-time-wait-sync
+    enabled: yes
+  when: ustreamer_enable_omx | bool
+
 - name: install uStreamer as a service
   template:
     src: ustreamer.systemd.j2

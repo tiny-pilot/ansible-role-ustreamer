@@ -1,6 +1,12 @@
 [Unit]
 Description=uStreamer - Lightweight, optimized video encoder
 After=syslog.target network.target
+{% if ustreamer_enable_omx %}
+# When using the OMX encoder, changes to the clock while uStreamer is running
+# will break the encoder, so wait until time is synced.
+# See: https://github.com/pikvm/ustreamer/issues/56
+Requires=time-sync.target
+{% endif %}
 
 [Service]
 Type=simple
