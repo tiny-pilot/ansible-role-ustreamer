@@ -49,8 +49,8 @@
       - build-essential
       - git
       - libevent-dev
-      - uuid-dev
       - libbsd-dev
+      - uuid-dev
 
 - name: collect Raspberry Pi OS specific required apt packages
   set_fact:
@@ -69,7 +69,7 @@
 
 - name: collect Ubuntu-specific required apt packages
   set_fact:
-    ustreamer_packages: "{{ ustreamer_packages }} + ['libjpeg62-dev']"
+    ustreamer_packages: "{{ ustreamer_packages }} + ['gcc', 'libjpeg8', 'libjpeg-dev', 'libjpeg-turbo8', 'libuuid1', 'libbsd0', 'make']"
   when: ansible_distribution == 'Ubuntu' and not ansible_architecture.startswith("arm")
 
 - name: install uStreamer pre-requisite packages
@@ -116,6 +116,9 @@
     chdir: "{{ ustreamer_dir }}"
     params:
       WITH_OMX: "{{ ustreamer_enable_omx | int }}"
+  # TODO: We shouldn't have to set conditions on this, but it otherwise builds every time
+  # for some reason, and I can't figure out why.
+  when: ustreamer_repo_result.changed or ustreamer_cache_build_settings_result.changed
 
 - name: fix uStreamer folder permissions
   file:
