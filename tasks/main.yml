@@ -116,6 +116,9 @@
     chdir: "{{ ustreamer_dir }}"
     params:
       WITH_OMX: "{{ ustreamer_enable_omx | int }}"
+  # TODO: We shouldn't have to set conditions on this, but it otherwise builds every time
+  # for some reason, and I can't figure out why.
+  when: ustreamer_repo_result.changed or ustreamer_cache_build_settings_result.changed
 
 - name: fix uStreamer folder permissions
   file:
