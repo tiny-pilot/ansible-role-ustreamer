@@ -32,8 +32,8 @@
 
 - name: copy TC358743 EDID file
   copy:
-    src: tc358743-edid.hex
-    dest: "{{ ustreamer_edids_dir }}"
+    content: "{{ ustreamer_edid }}"
+    dest: "{{ ustreamer_edids_dir }}/tc358743-edid.hex"
     owner: "{{ ustreamer_user }}"
     group: "{{ ustreamer_group }}"
     mode: '0644'
