@@ -22,14 +22,14 @@
   set_fact:
     boot_config_exists: "{{ boot_config_result.stat.exists }}"
 
-- name: check whether this machine was previously provisioned
+- name: check whether this machine has a uStreamer settings file
   stat:
-    path: "{{ ustreamer_provisioning_config_file }}"
-  register: ustreamer_provisioning_config_file_result
+    path: "{{ ustreamer_settings_file }}"
+  register: ustreamer_settings_file_result
 
-- name: read saved settings from previous provisioning
+- name: read saved settings
   import_tasks: check_saved_settings.yml
-  when: ustreamer_provisioning_config_file_result.stat.exists | bool
+  when: ustreamer_settings_file_result.stat.exists | bool
 
 - name: configure TC358743 HDMI capture chip
   import_tasks: provision_tc358743.yml
@@ -149,7 +149,7 @@
 - name: save provisioning configuration
   template:
     src: config.yml.j2
-    dest: "{{ ustreamer_provisioning_config_file }}"
+    dest: "{{ ustreamer_settings_file }}"
     owner: "{{ ustreamer_user }}"
     group: "{{ ustreamer_group }}"
     mode: '0644'
