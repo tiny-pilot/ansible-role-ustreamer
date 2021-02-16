@@ -1,10 +1,10 @@
 ---
-- name: read configuration from previous provisioning
+- name: read uStreamer settings file
   slurp:
     src: "{{ ustreamer_settings_file }}"
   register: ustreamer_settings_slurp
 
-- name: decode provisioning config
+- name: decode settings file
   set_fact:
       ustreamer_settings: "{{ ustreamer_settings_slurp['content'] | b64decode | from_yaml }}"
 

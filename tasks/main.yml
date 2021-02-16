@@ -146,7 +146,7 @@
     name: ustreamer
     enabled: yes
 
-- name: save provisioning configuration
+- name: save uStreamer settings file
   template:
     src: config.yml.j2
     dest: "{{ ustreamer_settings_file }}"
