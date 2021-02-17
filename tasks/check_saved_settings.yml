@@ -1,14 +1,14 @@
 ---
-- name: read configuration from previous provisioning
+- name: read uStreamer settings file
   slurp:
-    src: "{{ ustreamer_provisioning_config_file }}"
-  register: ustreamer_provisioning_config_slurp
+    src: "{{ ustreamer_settings_file }}"
+  register: ustreamer_settings_slurp
 
-- name: decode provisioning config
+- name: decode settings file
   set_fact:
-      ustreamer_provisioning_config: "{{ ustreamer_provisioning_config_slurp['content'] | b64decode | from_yaml }}"
+      ustreamer_settings: "{{ ustreamer_settings_slurp['content'] | b64decode | from_yaml }}"
 
 - name: read ustreamer_capture_device from config file if it's not already defined
   set_fact:
-    ustreamer_capture_device: "{{ ustreamer_provisioning_config['capture_device'] if ustreamer_capture_device == None and 'capture_device' in ustreamer_provisioning_config else ustreamer_capture_device }}"
+    ustreamer_capture_device: "{{ ustreamer_settings['capture_device'] if ustreamer_capture_device == None and 'capture_device' in ustreamer_settings else ustreamer_capture_device }}"
   when: ustreamer_capture_device == None
