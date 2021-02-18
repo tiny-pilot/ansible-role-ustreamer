@@ -34,6 +34,9 @@ ExecStart={{ ustreamer_dir }}/ustreamer \
 {% if ustreamer_drop_same_frames %}
   --drop-same-frames {{ ustreamer_drop_same_frames }} \
 {% endif %}
+{% if ustreamer_quality %}
+  --quality {{ ustreamer_quality }} \
+{% endif %}
 {% if ustreamer_persistent %}
   --persistent \
 {% endif %}
