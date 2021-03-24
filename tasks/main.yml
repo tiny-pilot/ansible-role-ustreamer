@@ -39,9 +39,13 @@
   import_tasks: remove_tc358743.yml
   when: ustreamer_capture_device != 'tc358743'
 
+- name: save whether boot config file exists
+  set_fact:
+    ustreamer_is_os_raspbian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Raspbian' }}"
+
 - name: enable OpenMax IL acceleration on Pi OS
   set_fact:
-    ustreamer_enable_omx: "{{ ansible_architecture.startswith('arm') and ustreamer_encoder != None and ustreamer_encoder.lower() == 'omx' }}"
+    ustreamer_enable_omx: "{{ ustreamer_is_os_raspbian and ustreamer_encoder != None and ustreamer_encoder.lower() == 'omx' }}"
 
 - name: collect universal required apt packages
   set_fact:
@@ -55,7 +59,7 @@
 - name: collect Raspberry Pi OS specific required apt packages
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libjpeg8-dev']"
-  when: ansible_architecture.startswith("arm")
+  when: ustreamer_is_os_raspbian
 
 - name: install libraspberrypi-dev if we're using OpenMax IL acceleration
   set_fact:
@@ -65,12 +69,12 @@
 - name: collect Debian-specific required apt packages
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libjpeg62-turbo-dev']"
-  when: ansible_distribution == 'Debian' and not ansible_architecture.startswith("arm")
+  when: ansible_distribution == 'Debian' and not ustreamer_is_os_raspbian
 
 - name: collect Ubuntu-specific required apt packages
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['gcc', 'libjpeg8', 'libjpeg-dev', 'libjpeg-turbo8', 'libuuid1', 'libbsd0', 'make']"
-  when: ansible_distribution == 'Ubuntu' and not ansible_architecture.startswith("arm")
+  when: ansible_distribution == 'Ubuntu'
 
 - name: install uStreamer pre-requisite packages
   apt:
