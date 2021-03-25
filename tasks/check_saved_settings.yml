@@ -10,5 +10,5 @@
 
 - name: read ustreamer_capture_device from config file if it's not already defined
   set_fact:
-    ustreamer_capture_device: "{{ ustreamer_settings['capture_device'] }}"
-  when: ustreamer_capture_device == None and 'capture_device' in ustreamer_settings
+    ustreamer_capture_device: "{{ ustreamer_settings['capture_device'] if ustreamer_capture_device == None and 'capture_device' in ustreamer_settings else ustreamer_capture_device }}"
+  when: ustreamer_capture_device == None
