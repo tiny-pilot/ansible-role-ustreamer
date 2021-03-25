@@ -2,16 +2,14 @@
 ustreamer_group: ustreamer
 ustreamer_user: ustreamer
 ustreamer_dir: /opt/ustreamer
-# Temporary workaround for a uStreamer bug that affects TinyPilot.
-# See: https://github.com/mtlynch/ustreamer/commit/3ee535ce83a343ecae504a0a37efb08721126953
-ustreamer_repo: https://github.com/mtlynch/ustreamer.git
-ustreamer_repo_version: semwait
+ustreamer_repo: https://github.com/pikvm/ustreamer.git
+ustreamer_repo_version: master
 
 # Network interface to listen for connections.
-ustreamer_interface: '127.0.0.1'
+ustreamer_interface: null
 
 # Port to listen for connections.
-ustreamer_port: 8001
+ustreamer_port: null
 
 # Path to video device, such as /dev/video1.
 ustreamer_video_path: null
