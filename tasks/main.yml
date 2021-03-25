@@ -17,39 +17,27 @@
   stat:
     path: /boot/config.txt
   register: boot_config_result
-  tags:
-    - config
 
 - name: save whether boot config file exists
   set_fact:
     boot_config_exists: "{{ boot_config_result.stat.exists }}"
-  tags:
-    - config
 
 - name: check whether this machine has a uStreamer settings file
   stat:
     path: "{{ ustreamer_settings_file }}"
   register: ustreamer_settings_file_result
-  tags:
-    - config
 
 - name: read saved settings
   import_tasks: check_saved_settings.yml
   when: ustreamer_settings_file_result.stat.exists | bool
-  tags:
-    - config
 
 - name: configure TC358743 HDMI capture chip
   import_tasks: provision_tc358743.yml
   when: ustreamer_capture_device == 'tc358743'
-  tags:
-    - config
 
 - name: uninstall TC358743 settings if they're not in use
   import_tasks: remove_tc358743.yml
   when: ustreamer_capture_device != 'tc358743'
-  tags:
-    - config
 
 - name: enable OpenMax IL acceleration on Pi OS
   set_fact:
@@ -154,7 +142,7 @@
     - reload systemd config
     - restart uStreamer
   tags:
-    - config
+    - systemd-config
 
 - name: enable systemd uStreamer service file
   systemd:
@@ -168,5 +156,3 @@
     owner: "{{ ustreamer_user }}"
     group: "{{ ustreamer_group }}"
     mode: '0644'
-  tags:
-    - config
