@@ -145,6 +145,8 @@
   notify:
     - reload systemd config
     - restart uStreamer
+  tags:
+    - systemd-config
 
 - name: enable systemd uStreamer service file
   systemd:
