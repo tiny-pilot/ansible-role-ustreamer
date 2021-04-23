@@ -29,6 +29,9 @@ ustreamer_desired_fps: null
 # Number of workers.
 ustreamer_workers: null
 
+# Quality of the JPEG encoding from 1 to 100 (best).
+ustreamer_quality: null
+
 # Don't re-initialize device on timeout (for example when HDMI cable
 # was disconnected). Can be either true or false.
 ustreamer_persistent: null
