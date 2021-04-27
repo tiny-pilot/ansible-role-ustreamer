@@ -32,6 +32,11 @@ ustreamer_workers: null
 # Quality of the JPEG encoding from 1 to 100 (best).
 ustreamer_quality: null
 
+# Adjustment to stream brightness. This requires support from the
+# capture hardware, and the value is an integer in some range
+# depending on the hardware.
+ustreamer_brightness: null
+
 # Don't re-initialize device on timeout (for example when HDMI cable
 # was disconnected). Can be either true or false.
 ustreamer_persistent: null
