@@ -1,6 +1,6 @@
 # Ansible Role: µStreamer
 
-[![CircleCI](https://circleci.com/gh/tiny-pilot/ansible-role-ustreamer.svg?style=svg)](https://circleci.com/gh/tiny-pilot/ansible-role-ustreamer) [![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-ustreamer-blue.svg?style=flat-square)](https://galaxy.ansible.com/mtlynch/ustreamer) [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](LICENSE)
+[![CircleCI](https://circleci.com/gh/tiny-pilot/ansible-role-ustreamer.svg?style=svg)](https://circleci.com/gh/tiny-pilot/ansible-role-ustreamer) [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](LICENSE)
 
 Ansible role for [µStreamer](https://github.com/pikvm/ustreamer).
 
@@ -31,13 +31,13 @@ None
 ```yaml
 - hosts: all
   roles:
-    - role: mtlynch.ustreamer
+    - role: ansible-role-ustreamer
 ```
 
 ### Running Example Playbook
 
 ```bash
-ansible-galaxy install mtlynch.ustreamer
+ansible-galaxy install git+https://github.com/tiny-pilot/ansible-role-ustreamer.git
 ansible-playbook example.yml
 ```
 
