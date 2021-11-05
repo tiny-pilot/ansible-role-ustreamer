@@ -49,7 +49,9 @@ ExecStart={{ ustreamer_dir }}/ustreamer \
 {% if ustreamer_tcp_nodelay %}
   --tcp-nodelay \
 {% endif %}
-
+  && :
+# This last line is just to end the multi-line command because the line
+# before is ending with backslash and so expects to be continued.
 Restart=always
 
 [Install]
