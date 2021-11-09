@@ -58,7 +58,7 @@
 
 - name: collect Raspberry Pi OS specific required apt packages
   set_fact:
-    ustreamer_packages: "{{ ustreamer_packages }} + ['libjpeg8-dev']"
+    ustreamer_packages: "{{ ustreamer_packages }} + ['libjpeg9-dev']"
   when: ustreamer_is_os_raspbian
 
 - name: install libraspberrypi-dev if we're using OpenMax IL acceleration
