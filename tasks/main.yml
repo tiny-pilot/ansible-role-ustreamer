@@ -144,14 +144,10 @@
     mode: '0644'
   notify:
     - reload systemd config
+    - enable uStreamer
     - restart uStreamer
   tags:
     - systemd-config
-
-- name: enable systemd uStreamer service file
-  systemd:
-    name: ustreamer
-    enabled: yes
 
 - name: save uStreamer settings file
   template:
