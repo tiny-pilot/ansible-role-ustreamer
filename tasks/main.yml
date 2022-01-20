@@ -101,6 +101,8 @@
   make:
     chdir: "{{ ustreamer_dir }}"
     target: clean
+  tags:
+    - molecule-idempotence-notest
 
 - name: build uStreamer
   make:
@@ -109,6 +111,8 @@
       WITH_OMX: "{{ ustreamer_enable_omx | int }}"
   notify:
     - restart uStreamer
+  tags:
+    - molecule-idempotence-notest
 
 - name: fix uStreamer folder permissions
   file:
