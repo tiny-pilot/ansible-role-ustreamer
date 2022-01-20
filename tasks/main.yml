@@ -93,36 +93,22 @@
     repo: "{{ ustreamer_repo }}"
     dest: "{{ ustreamer_dir }}"
     version: "{{ ustreamer_repo_version }}"
-  register: ustreamer_repo_result
-  notify:
-    - restart uStreamer
 
-# We don't actually need this file for anything. It's just a canary to keep
-# track of when we need to clean the build because of a change in build options
-# since the last compilation.
-- name: cache build settings
-  template:
-    src: build-settings.j2
-    dest: "/home/{{ ustreamer_user }}/build-settings.cache"
-    owner: "{{ ustreamer_user }}"
-    group: "{{ ustreamer_group }}"
-    mode: '0644'
-  register: ustreamer_cache_build_settings_result
-
-- name: clean repository if needed
+# We always need to clean & build uStreamer to ensure that the uStreamer service
+# is in sync with its dependencies installed on the device.
+# Issue: https://github.com/tiny-pilot/ansible-role-tinypilot/issues/174
+- name: clean uStreamer repository
   make:
     chdir: "{{ ustreamer_dir }}"
     target: clean
-  when: ustreamer_repo_result.changed or ustreamer_cache_build_settings_result.changed
 
 - name: build uStreamer
   make:
     chdir: "{{ ustreamer_dir }}"
     params:
       WITH_OMX: "{{ ustreamer_enable_omx | int }}"
-  # TODO: We shouldn't have to set conditions on this, but it otherwise builds every time
-  # for some reason, and I can't figure out why.
-  when: ustreamer_repo_result.changed or ustreamer_cache_build_settings_result.changed
+  notify:
+    - restart uStreamer
 
 - name: fix uStreamer folder permissions
   file:
