@@ -77,3 +77,6 @@ ustreamer_edid: |
 
 # Location to store EDID files.
 ustreamer_edids_dir: /home/{{ ustreamer_user }}/edids
+
+# Enable the Janus WebRTC plugin.
+ustreamer_enable_janus: yes

@@ -109,6 +109,7 @@
     chdir: "{{ ustreamer_dir }}"
     params:
       WITH_OMX: "{{ ustreamer_enable_omx | int }}"
+      WITH_JANUS: "{{ ustreamer_enable_janus | int }}"
   notify:
     - restart uStreamer
   tags:
