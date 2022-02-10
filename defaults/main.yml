@@ -77,3 +77,6 @@ ustreamer_edid: |
 
 # Location to store EDID files.
 ustreamer_edids_dir: /home/{{ ustreamer_user }}/edids
+
+# Compile the uStreamer plugin for Janus WebRTC Server.
+ustreamer_compile_janus_plugin: no
