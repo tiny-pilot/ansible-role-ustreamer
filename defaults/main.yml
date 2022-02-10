@@ -79,4 +79,4 @@ ustreamer_edid: |
 ustreamer_edids_dir: /home/{{ ustreamer_user }}/edids
 
 # Enable the Janus WebRTC plugin.
-ustreamer_enable_janus: yes
+ustreamer_enable_janus: no
