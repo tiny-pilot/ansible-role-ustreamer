@@ -79,7 +79,7 @@
 - name: collect Janus WebRTC plugin specific required apt packages
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libglib2.0-dev', 'libjansson-dev']"
-  when: ustreamer_enable_janus
+  when: ustreamer_compile_janus_plugin
 
 - name: install uStreamer pre-requisite packages
   apt:
@@ -114,7 +114,7 @@
     chdir: "{{ ustreamer_dir }}"
     params:
       WITH_OMX: "{{ ustreamer_enable_omx | int }}"
-      WITH_JANUS: "{{ ustreamer_enable_janus | int }}"
+      WITH_JANUS: "{{ ustreamer_compile_janus_plugin | int }}"
   notify:
     - restart uStreamer
   tags:
