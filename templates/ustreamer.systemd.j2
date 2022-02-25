@@ -49,6 +49,15 @@ ExecStart={{ ustreamer_dir }}/ustreamer \
 {% if ustreamer_tcp_nodelay %}
   --tcp-nodelay \
 {% endif %}
+{% if ustreamer_h264_sink %}
+  --h264-sink {{ ustreamer_h264_sink }} \
+{% endif %}
+{% if ustreamer_h264_sink_mode %}
+  --h264-sink-mode {{ ustreamer_h264_sink_mode }} \
+{% endif %}
+{% if ustreamer_h264_sink_rm %}
+  --h264-sink-rm \
+{% endif %}
   && :
 # This last line is just to end the multi-line command because the line
 # before is ending with backslash and so expects to be continued.

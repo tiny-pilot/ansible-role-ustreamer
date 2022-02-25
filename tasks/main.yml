@@ -43,10 +43,6 @@
   set_fact:
     ustreamer_is_os_raspbian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Raspbian' }}"
 
-- name: enable OpenMax IL acceleration on Pi OS
-  set_fact:
-    ustreamer_enable_omx: "{{ ustreamer_is_os_raspbian and ustreamer_encoder != None and ustreamer_encoder.lower() == 'omx' }}"
-
 - name: collect universal required apt packages
   set_fact:
     ustreamer_packages:

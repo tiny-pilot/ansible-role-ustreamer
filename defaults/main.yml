@@ -78,5 +78,20 @@ ustreamer_edid: |
 # Location to store EDID files.
 ustreamer_edids_dir: /home/{{ ustreamer_user }}/edids
 
+# Compile uStreamer with OpenMax IL hardware acceleration.
+ustreamer_compile_omx: no
+
 # Compile the uStreamer plugin for Janus WebRTC Server.
 ustreamer_compile_janus_plugin: no
+
+# H264 sink options are only available when OpenMax IL hardware acceleration is
+# enabled via the ustreamer_compile_omx variable.
+
+# Use the specified shared memory object to sink H264 frames encoded by MMAL.
+ustreamer_h264_sink: null
+
+# Set H264 sink permissions, such as 777.
+ustreamer_h264_sink_mode: null
+
+# Remove shared memory on stop.
+ustreamer_h264_sink_rm: no
