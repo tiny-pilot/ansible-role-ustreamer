@@ -60,7 +60,7 @@
 - name: install libraspberrypi-dev if we're using OpenMax IL acceleration
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libraspberrypi-dev']"
-  when: ustreamer_enable_omx
+  when: ustreamer_compile_omx
 
 - name: collect Debian-specific required apt packages
   set_fact:
@@ -109,7 +109,7 @@
   make:
     chdir: "{{ ustreamer_dir }}"
     params:
-      WITH_OMX: "{{ ustreamer_enable_omx | int }}"
+      WITH_OMX: "{{ ustreamer_compile_omx | int }}"
       WITH_JANUS: "{{ ustreamer_compile_janus_plugin | int }}"
   notify:
     - restart uStreamer
