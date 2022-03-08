@@ -1,4 +1,14 @@
 ---
+- name: check that the H264 variables are in a consistent state
+  fail:
+    msg: >-
+      The H264 variables are in an inconsistent state. You must set the
+      ustreamer_h264_sink variable in order to set other H264 variables.
+  when: >-
+    ustreamer_h264_sink == None
+    and (ustreamer_h264_sink_mode != None
+         or ustreamer_h264_sink_rm != None)
+
 - name: create ustreamer group
   group:
     name: "{{ ustreamer_group }}"
@@ -45,7 +55,11 @@
 
 - name: enable OpenMax IL acceleration on Pi OS
   set_fact:
-    ustreamer_enable_omx: "{{ ustreamer_is_os_raspbian and ustreamer_encoder != None and ustreamer_encoder.lower() == 'omx' }}"
+    ustreamer_compile_omx: >-
+      {{ ustreamer_h264_sink != None
+         or (ustreamer_is_os_raspbian
+             and ustreamer_encoder != None
+             and ustreamer_encoder.lower() == 'omx') }}
 
 - name: collect universal required apt packages
   set_fact:
@@ -64,7 +78,7 @@
 - name: install libraspberrypi-dev if we're using OpenMax IL acceleration
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libraspberrypi-dev']"
-  when: ustreamer_enable_omx
+  when: ustreamer_compile_omx
 
 - name: collect Debian-specific required apt packages
   set_fact:
@@ -113,7 +127,7 @@
   make:
     chdir: "{{ ustreamer_dir }}"
     params:
-      WITH_OMX: "{{ ustreamer_enable_omx | int }}"
+      WITH_OMX: "{{ ustreamer_compile_omx | int }}"
       WITH_JANUS: "{{ ustreamer_compile_janus_plugin | int }}"
   notify:
     - restart uStreamer
