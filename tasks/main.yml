@@ -56,10 +56,10 @@
 - name: enable OpenMax IL acceleration on Pi OS
   set_fact:
     ustreamer_compile_omx: >-
-      {{ ustreamer_h264_sink != None
-         or (ustreamer_is_os_raspbian
-             and ustreamer_encoder != None
-             and ustreamer_encoder.lower() == 'omx') }}
+      {{ ustreamer_is_os_raspbian
+         and (ustreamer_encoder != None
+              and ustreamer_encoder.lower() == 'omx'
+              or ustreamer_h264_sink != None) }}
 
 - name: collect universal required apt packages
   set_fact:
