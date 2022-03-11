@@ -49,17 +49,21 @@
   import_tasks: remove_tc358743.yml
   when: ustreamer_capture_device != 'tc358743'
 
-- name: save whether boot config file exists
+- name: check if OS is Raspberry Pi OS
   set_fact:
     ustreamer_is_os_raspbian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Raspbian' }}"
 
-- name: enable OpenMax IL acceleration on Pi OS
+- name: enable OpenMax IL acceleration
   set_fact:
     ustreamer_compile_omx: >-
       {{ ustreamer_h264_sink != None
-         or (ustreamer_is_os_raspbian
-             and ustreamer_encoder != None
+         or (ustreamer_encoder != None
              and ustreamer_encoder.lower() == 'omx') }}
+
+- name: check that OpenMax IL acceleration is only compiled on Raspberry Pi OS
+  fail:
+    msg: OpenMax IL acceleration (OMX) can only be compiled on Raspberry Pi OS.
+  when: ustreamer_compile_omx and not ustreamer_is_os_raspbian
 
 - name: collect universal required apt packages
   set_fact:
