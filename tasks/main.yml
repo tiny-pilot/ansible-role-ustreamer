@@ -108,8 +108,9 @@
   file:
     path: "{{ ustreamer_dir }}"
     state: directory
-    owner: "{{ ustreamer_user }}"
-    group: "{{ ustreamer_group }}"
+    owner: root
+    group: root
+    recurse: yes
 
 - name: get uStreamer repo
   git:
