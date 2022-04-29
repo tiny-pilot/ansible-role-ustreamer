@@ -34,6 +34,8 @@ platforms:
     pre_build_image: true
 provisioner:
   name: ansible
+  connection_options:
+    ansible_user: ansible
 verifier:
   name: ansible
 scenario:
