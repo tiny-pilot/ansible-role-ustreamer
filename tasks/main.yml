@@ -125,6 +125,11 @@
     repo: "{{ ustreamer_repo }}"
     dest: "{{ ustreamer_dir }}"
     version: "{{ ustreamer_repo_version }}"
+  tags:
+    # This fails the idempotency test because we're also skipping the
+    # idempotency test on the previous task that allows git to sync.
+    # Issue: https://github.com/tiny-pilot/tinypilot/issues/963
+    - molecule-idempotence-notest
 
 # We always need to clean & build uStreamer to ensure that the uStreamer service
 # is in sync with its dependencies installed on the device.
