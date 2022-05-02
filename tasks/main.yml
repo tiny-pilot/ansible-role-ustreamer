@@ -108,14 +108,28 @@
   file:
     path: "{{ ustreamer_dir }}"
     state: directory
-    owner: "{{ ustreamer_user }}"
-    group: "{{ ustreamer_group }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    recurse: yes
+  tags:
+    # This fails the idempotency test because it must run on every provision
+    # to set the correct directory ownership that allows git to sync.
+    # Issue: https://github.com/tiny-pilot/tinypilot/issues/963
+    - molecule-idempotence-notest
 
 - name: get uStreamer repo
+  # Don't escalate privileges because only the directory owner can use git.
+  # Issue: https://github.com/tiny-pilot/tinypilot/issues/963
+  become: no
   git:
     repo: "{{ ustreamer_repo }}"
     dest: "{{ ustreamer_dir }}"
     version: "{{ ustreamer_repo_version }}"
+  tags:
+    # This fails the idempotency test because we're also skipping the
+    # idempotency test on the previous task that allows git to sync.
+    # Issue: https://github.com/tiny-pilot/tinypilot/issues/963
+    - molecule-idempotence-notest
 
 # We always need to clean & build uStreamer to ensure that the uStreamer service
 # is in sync with its dependencies installed on the device.
@@ -145,7 +159,6 @@
     owner: "{{ ustreamer_user }}"
     group: "{{ ustreamer_group }}"
     recurse: yes
-  # TODO: Figure out why this fails idempotency otherwise.
   tags:
     - molecule-idempotence-notest
 
