@@ -10,5 +10,4 @@
       include_role:
         name: "ansible-role-ustreamer"
       vars:
-        # Test on 4.13, as v5 seems to require a different gcc version.
-        ustreamer_repo_version: "v4.13"
+        ustreamer_repo_version: "v5.22"
