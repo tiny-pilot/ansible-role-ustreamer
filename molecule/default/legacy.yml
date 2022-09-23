@@ -1,0 +1,13 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: true
+        cache_valid_time: 600
+    - name: "Include ansible-role-ustreamer"
+      include_role:
+        name: "ansible-role-ustreamer"
+      vars:
+        ustreamer_repo_version: "v4.13"
