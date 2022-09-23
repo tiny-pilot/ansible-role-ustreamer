@@ -66,7 +66,7 @@
 
 - name: use custom settings for TC358743 chip for any facts not already defined
   set_fact:
-    ustreamer_encoder: "{{ 'm2m-image' if ustreamer_encoder == None else ustreamer_encoder }}"
+    ustreamer_encoder: "{{ 'm2m-video' if ustreamer_encoder == None else ustreamer_encoder }}"
     ustreamer_format: "{{ 'uyvy' if ustreamer_format == None else ustreamer_format }}"
     ustreamer_workers: "{{ 3 if ustreamer_workers == None else ustreamer_workers }}"
     ustreamer_persistent: "{{ True if ustreamer_persistent == None else ustreamer_persistent }}"
