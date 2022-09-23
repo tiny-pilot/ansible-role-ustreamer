@@ -25,6 +25,9 @@ jobs:
           name: Run static analysis on bash scripts
           command: ./tests/check-bash
   build:
+    parameters:
+      scenario:
+        type: string
     machine:
       image: ubuntu-2004:202010-01
     resource_class: large
@@ -47,11 +50,14 @@ jobs:
             pip install -r molecule/requirements.txt && \
             ansible --version && \
             molecule --version && \
-            molecule test --all --parallel
+            molecule test --scenario-name << parameters.scenario >>
 workflows:
   version: 2
   all-tests:
     jobs:
       - check_whitespace
       - check_bash
-      - build
+      - build:
+          matrix:
+            parameters:
+              scenario: [legacy, default]
