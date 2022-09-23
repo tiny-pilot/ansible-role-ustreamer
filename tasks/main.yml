@@ -56,7 +56,10 @@
 - name: enable OpenMax IL acceleration (legacy)
   set_fact:
     ustreamer_compile_omx: >-
-      {{ (ustreamer_encoder != None and ustreamer_encoder.lower() == 'omx') }}
+      {{ (ustreamer_encoder != None and ustreamer_encoder.lower() == 'omx') or
+          (ustreamer_h264_sink != None and
+            (ustreamer_is_os_raspbian and
+              ((ansible_distribution_major_version | int) <= 10))) )}}
 
 - name: check that OpenMax IL acceleration is only compiled on Raspberry Pi OS 10 (Buster) and earlier
   fail:
