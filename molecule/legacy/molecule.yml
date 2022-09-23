@@ -42,7 +42,7 @@ provisioner:
 verifier:
   name: ansible
 scenario:
-  name: default
+  name: legacy
   test_sequence:
     - lint
     - destroy
