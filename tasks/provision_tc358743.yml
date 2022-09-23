@@ -53,7 +53,8 @@
 - name: default to legacy OpenMAX encoder on Raspbian 10 and earlier
   set_fact:
     ustreamer_encoder: "{{ 'omx' if ustreamer_encoder == None else ustreamer_encoder }}"
-  when: ustreamer_is_os_raspbian and ansible_distribution_major_version <= 10
+  when: ustreamer_is_os_raspbian and
+          ((ansible_distribution_major_version | int) <= 10)
 
 - name: use custom settings for TC358743 chip for any facts not already defined
   set_fact:
