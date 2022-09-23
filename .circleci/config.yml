@@ -47,7 +47,7 @@ jobs:
             pip install -r molecule/requirements.txt && \
             ansible --version && \
             molecule --version && \
-            molecule test --all
+            molecule test --all --parallel
 workflows:
   version: 2
   all-tests:
