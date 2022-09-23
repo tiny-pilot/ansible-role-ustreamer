@@ -41,6 +41,10 @@
   import_tasks: check_saved_settings.yml
   when: ustreamer_settings_file_result.stat.exists | bool
 
+- name: check if OS is Raspberry Pi OS
+  set_fact:
+    ustreamer_is_os_raspbian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Raspbian' }}"
+
 - name: configure TC358743 HDMI capture chip
   import_tasks: provision_tc358743.yml
   when: ustreamer_capture_device == 'tc358743'
@@ -49,16 +53,10 @@
   import_tasks: remove_tc358743.yml
   when: ustreamer_capture_device != 'tc358743'
 
-- name: check if OS is Raspberry Pi OS
-  set_fact:
-    ustreamer_is_os_raspbian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Raspbian' }}"
-
 - name: enable OpenMax IL acceleration (legacy)
   set_fact:
     ustreamer_compile_omx: >-
-      {{ ustreamer_h264_sink != None
-         or (ustreamer_encoder != None
-             and ustreamer_encoder.lower() == 'omx') }}
+      {{ (ustreamer_encoder != None and ustreamer_encoder.lower() == 'omx') }}
 
 - name: check that OpenMax IL acceleration is only compiled on Raspberry Pi OS 10 (Buster) and earlier
   fail:
