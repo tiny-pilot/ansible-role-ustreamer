@@ -39,7 +39,7 @@
     mode: '0644'
 
 - name: get version of systemd
-  shell: systemctl --version | grep --only-matching '([0-9][0-9]*)' | grep --only-matching '[0-9]*'
+  shell: systemctl --version | head -n 1 | grep --only-matching --perl-regexp '(?<=systemd )[0-9]+'
   register: ustreamer_systemd_version_result
 
 - name: save systemd version
