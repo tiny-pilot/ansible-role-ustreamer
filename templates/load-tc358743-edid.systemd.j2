@@ -6,7 +6,13 @@ StartLimitIntervalSec=300
 StartLimitBurst=10
 
 [Service]
+{# Versions of systemd before 244 didn't support Restart for oneshot services
+   https://github.com/systemd/systemd/pull/13754 #}
+{% if (ustreamer_systemd_version | int) >= 244 %}
 Type=oneshot
+{% else %}
+Type=simple
+{% endif %}
 User=root
 ExecStart=v4l2-ctl \
   --set-edid=file={{ ustreamer_edids_dir }}/tc358743-edid.hex \
