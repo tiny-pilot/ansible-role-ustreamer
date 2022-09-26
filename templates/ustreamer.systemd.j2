@@ -1,6 +1,6 @@
 [Unit]
 Description=uStreamer - Lightweight, optimized video encoder
-After=syslog.target network.target
+After=syslog.target network.target{% if ustreamer_capture_device == 'tc358743' %} load-tc358743-edid.service{% endif %}
 
 [Service]
 Type=simple
