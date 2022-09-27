@@ -18,6 +18,7 @@ ExecStart=v4l2-ctl \
   --set-edid=file={{ ustreamer_edids_dir }}/tc358743-edid.hex \
   --fix-edid-checksums
 Restart=on-failure
+RestartSec=2
 
 [Install]
 WantedBy=local-fs.target
