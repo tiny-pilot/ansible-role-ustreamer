@@ -1,13 +1,24 @@
 [Unit]
 Description=Load EDID for TC358743 HDMI capture chip.
 After=syslog.target
+# Give up if we restart on failure 20 times within 5 minutes (300 seconds).
+StartLimitIntervalSec=300
+StartLimitBurst=20
 
 [Service]
+{# Versions of systemd before 244 didn't support Restart for oneshot services
+   https://github.com/systemd/systemd/pull/13754 #}
+{% if (ustreamer_systemd_version | int) >= 244 %}
 Type=oneshot
+{% else %}
+Type=simple
+{% endif %}
 User=root
 ExecStart=v4l2-ctl \
   --set-edid=file={{ ustreamer_edids_dir }}/tc358743-edid.hex \
   --fix-edid-checksums
+Restart=on-failure
+RestartSec=2
 
 [Install]
 WantedBy=local-fs.target

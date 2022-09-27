@@ -38,6 +38,14 @@
     group: "{{ ustreamer_group }}"
     mode: '0644'
 
+- name: get version of systemd
+  shell: systemctl --version | head -n 1 | grep --only-matching --perl-regexp '(?<=systemd )[0-9]+'
+  register: ustreamer_systemd_version_result
+
+- name: save systemd version
+  set_fact:
+    ustreamer_systemd_version: "{{ ustreamer_systemd_version_result.stdout }}"
+
 - name: install TC358743 initializer service
   template:
     src: load-tc358743-edid.systemd.j2
