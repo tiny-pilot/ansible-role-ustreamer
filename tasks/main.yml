@@ -45,6 +45,10 @@
   set_fact:
     ustreamer_is_os_raspbian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Raspbian' }}"
 
+- name: check if OS supports OpenMAX IL acceleration (OMX)
+  set_fact:
+    ustreamer_os_supports_omx: "{{ ustreamer_is_os_raspbian and ((ansible_distribution_major_version | int) <= 10) }}"
+
 - name: configure TC358743 HDMI capture chip
   import_tasks: provision_tc358743.yml
   when: ustreamer_capture_device == 'tc358743'
@@ -57,16 +61,12 @@
   set_fact:
     ustreamer_compile_omx: >-
       {{ (ustreamer_encoder != None and ustreamer_encoder.lower() == 'omx') or
-          (ustreamer_h264_sink != None and
-            (ustreamer_is_os_raspbian and
-              (ansible_distribution_major_version | int) <= 10)) }}
+          (ustreamer_h264_sink != None and ustreamer_os_supports_omx) }}
 
 - name: check that OpenMax IL acceleration is only compiled on Raspberry Pi OS 10 (Buster) and earlier
   fail:
     msg: OpenMax IL acceleration (OMX) is only available on Raspberry Pi OS 10 (Buster) and earlier.
-  when: ustreamer_compile_omx and not
-          (ustreamer_is_os_raspbian and
-            ((ansible_distribution_major_version | int) <= 10))
+  when: ustreamer_compile_omx and not ustreamer_os_supports_omx
 
 - name: collect universal required apt packages
   set_fact:
