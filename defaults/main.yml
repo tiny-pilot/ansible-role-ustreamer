@@ -81,8 +81,9 @@ ustreamer_edids_dir: /home/{{ ustreamer_user }}/edids
 # Compile the uStreamer plugin for Janus WebRTC Server.
 ustreamer_compile_janus_plugin: no
 
-# H264 sink options are only available when OpenMax IL hardware acceleration is
-# enabled via the dynamically defined ustreamer_compile_omx variable.
+# For versions of uStreamer prior to 5.0, H264 sink options are only available
+# when OpenMax IL hardware acceleration is enabled via the dynamically defined
+# ustreamer_compile_omx variable.
 
 # Use the specified shared memory object to sink H264 frames encoded by MMAL
 # (e.g., tinypilot::ustreamer::h264). Disabled by default.
