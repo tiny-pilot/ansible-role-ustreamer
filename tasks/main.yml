@@ -7,7 +7,8 @@
   when: >-
     ustreamer_h264_sink == None
     and (ustreamer_h264_sink_mode != None
-         or ustreamer_h264_sink_rm != None)
+         or ustreamer_h264_sink_rm != None
+         or ustreamer_h264_bitrate != None)
 
 - name: create ustreamer group
   group:
