@@ -153,6 +153,7 @@
       WITH_JANUS: "{{ ustreamer_compile_janus_plugin | int }}"
   notify:
     - restart uStreamer
+    - restart Janus
   tags:
     - molecule-idempotence-notest
 
@@ -176,6 +177,7 @@
   notify:
     - reload systemd config
     - restart uStreamer
+    - restart Janus
   tags:
     - systemd-config
 
