@@ -1,0 +1,19 @@
+---
+- name: install Janus Debian package
+  apt:
+    deb: "{{ ustreamer_janus_deb_file }}"
+
+- name: create uStreamer Janus plugin config
+  template:
+    src: janus.plugin.ustreamer.jcfg.j2
+    dest: "{{ ustreamer_janus_install_dir }}/etc/janus/janus.plugin.ustreamer.jcfg"
+  notify:
+    - restart janus service
+
+- name: install uStreamer Janus plugin
+  copy:
+    remote_src: yes
+    src: "{{ ustreamer_dir }}/janus/libjanus_ustreamer.so"
+    dest: "{{ ustreamer_janus_install_dir }}/lib/janus/plugins/"
+  notify:
+    - restart janus service

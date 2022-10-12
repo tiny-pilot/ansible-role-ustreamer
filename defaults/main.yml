@@ -78,8 +78,13 @@ ustreamer_edid: |
 # Location to store EDID files.
 ustreamer_edids_dir: /home/{{ ustreamer_user }}/edids
 
-# Compile the uStreamer plugin for Janus WebRTC Server.
-ustreamer_compile_janus_plugin: no
+# Enable H264 video streaming via WebRTC. This will install the Janus WebRTC
+# server, and compile and configure the uStreamer<>Janus plugin. If set to `no`,
+# then all other H264/Janus-related settings are ignored.
+ustreamer_with_h264: no
+
+# The port where the Janus WebRTC server will listen.
+ustreamer_janus_port: 8002
 
 # For versions of uStreamer prior to 5.0, H264 sink options are only available
 # when OpenMax IL hardware acceleration is enabled via the dynamically defined

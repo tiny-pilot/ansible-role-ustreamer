@@ -100,7 +100,7 @@
 - name: collect Janus WebRTC plugin specific required apt packages
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libglib2.0-dev', 'libjansson-dev']"
-  when: ustreamer_compile_janus_plugin
+  when: ustreamer_with_h264
 
 - name: install uStreamer pre-requisite packages
   apt:
@@ -149,7 +149,7 @@
     chdir: "{{ ustreamer_dir }}"
     params:
       WITH_OMX: "{{ ustreamer_compile_omx | int }}"
-      WITH_JANUS: "{{ ustreamer_compile_janus_plugin | int }}"
+      WITH_JANUS: "{{ ustreamer_with_h264 | int }}"
   notify:
     - restart uStreamer
   tags:
@@ -190,3 +190,9 @@
     owner: "{{ ustreamer_user }}"
     group: "{{ ustreamer_group }}"
     mode: '0644'
+
+- name: install Janus Gateway
+  import_tasks: janus.yml
+  tags:
+    - janus
+  when: ustreamer_with_h264
