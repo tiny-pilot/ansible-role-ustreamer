@@ -61,7 +61,7 @@
   set_fact:
     ustreamer_compile_omx: >-
       {{ (ustreamer_encoder != None and ustreamer_encoder.lower() == 'omx') or
-          (ustreamer_h264_sink != None and ustreamer_os_supports_omx) }}
+          (ustreamer_with_h264 and ustreamer_os_supports_omx) }}
 
 - name: check that OpenMax IL acceleration is only compiled on Raspberry Pi OS 10 (Buster) and earlier
   fail:
@@ -193,6 +193,4 @@
 
 - name: install Janus Gateway
   import_tasks: janus.yml
-  tags:
-    - janus
   when: ustreamer_with_h264
