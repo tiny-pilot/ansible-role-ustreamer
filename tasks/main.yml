@@ -9,6 +9,12 @@
     and (ustreamer_h264_sink_mode != None
          or ustreamer_h264_sink_rm != None)
 
+- name: determine whether to install Janus
+  tags:
+    - janus
+  set_fact:
+    ustreamer_install_janus: "{{ ustreamer_h264_sink != None }}"
+
 # If the `build uStreamer` step should be run with the `WITH_JANUS` option, we
 # need to install the Janus Debian package beforehand, because it provides
 # C-headers.
@@ -17,7 +23,7 @@
     deb: "{{ ustreamer_janus_deb_file }}"
   tags:
     - janus
-  when: ustreamer_with_h264
+  when: ustreamer_install_janus
 
 - name: create ustreamer group
   group:
@@ -71,7 +77,7 @@
   set_fact:
     ustreamer_compile_omx: >-
       {{ (ustreamer_encoder != None and ustreamer_encoder.lower() == 'omx') or
-          (ustreamer_with_h264 and ustreamer_os_supports_omx) }}
+          (ustreamer_install_janus and ustreamer_os_supports_omx) }}
 
 - name: check that OpenMax IL acceleration is only compiled on Raspberry Pi OS 10 (Buster) and earlier
   fail:
@@ -110,7 +116,7 @@
 - name: collect Janus WebRTC plugin specific required apt packages
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libglib2.0-dev', 'libjansson-dev']"
-  when: ustreamer_with_h264
+  when: ustreamer_install_janus
 
 - name: install uStreamer pre-requisite packages
   apt:
@@ -159,7 +165,7 @@
     chdir: "{{ ustreamer_dir }}"
     params:
       WITH_OMX: "{{ ustreamer_compile_omx | int }}"
-      WITH_JANUS: "{{ ustreamer_with_h264 | int }}"
+      WITH_JANUS: "{{ ustreamer_install_janus | int }}"
   notify:
     - restart uStreamer
   tags:
@@ -209,7 +215,7 @@
     - restart janus service
   tags:
     - janus
-  when: ustreamer_with_h264
+  when: ustreamer_install_janus
 
 - name: install uStreamer Janus plugin
   copy:
@@ -222,4 +228,4 @@
     - restart janus service
   tags:
     - janus
-  when: ustreamer_with_h264
+  when: ustreamer_install_janus
