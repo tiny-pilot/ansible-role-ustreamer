@@ -16,7 +16,7 @@
   apt:
     deb: "{{ ustreamer_janus_deb_file }}"
   tags:
-    - h264
+    - janus
   when: ustreamer_with_h264
 
 - name: create ustreamer group
@@ -208,7 +208,7 @@
   notify:
     - restart janus service
   tags:
-    - h264
+    - janus
   when: ustreamer_with_h264
 
 - name: install uStreamer Janus plugin
@@ -221,5 +221,5 @@
   notify:
     - restart janus service
   tags:
-    - h264
+    - janus
   when: ustreamer_with_h264
