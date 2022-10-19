@@ -11,6 +11,10 @@
          or ustreamer_h264_bitrate != None)
 
 - name: determine whether to install Janus
+  # When applying video settings changes via the `update-video-settings`
+  # privileged script, we run this Ansible role with the `--tag systemd-config`
+  # option. That triggers the `restart Janus` handler down the line, which
+  # relies on the `ustreamer_install_janus` variable being set.
   tags:
     - janus
     - systemd-config
