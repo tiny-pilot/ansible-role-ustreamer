@@ -7,11 +7,17 @@
   when: >-
     ustreamer_h264_sink == None
     and (ustreamer_h264_sink_mode != None
-         or ustreamer_h264_sink_rm != None)
+         or ustreamer_h264_sink_rm != None
+         or ustreamer_h264_bitrate != None)
 
 - name: determine whether to install Janus
+  # When applying video settings changes via the `update-video-settings`
+  # privileged script, we run this Ansible role with the `--tag systemd-config`
+  # option. That triggers the `restart Janus` handler down the line, which
+  # relies on the `ustreamer_install_janus` variable being set.
   tags:
     - janus
+    - systemd-config
   set_fact:
     ustreamer_install_janus: "{{ ustreamer_h264_sink != None }}"
 
@@ -191,6 +197,7 @@
   notify:
     - reload systemd config
     - restart uStreamer
+    - restart Janus
   tags:
     - systemd-config
 
@@ -212,7 +219,7 @@
     src: janus.plugin.ustreamer.jcfg.j2
     dest: "{{ ustreamer_janus_install_dir }}/etc/janus/janus.plugin.ustreamer.jcfg"
   notify:
-    - restart janus service
+    - restart Janus
   tags:
     - janus
   when: ustreamer_install_janus
@@ -225,7 +232,7 @@
     src: "{{ ustreamer_dir }}/janus/libjanus_ustreamer.so"
     dest: "{{ ustreamer_janus_install_dir }}/lib/janus/plugins/"
   notify:
-    - restart janus service
+    - restart Janus
   tags:
     - janus
   when: ustreamer_install_janus

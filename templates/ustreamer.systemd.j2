@@ -58,6 +58,9 @@ ExecStart={{ ustreamer_dir }}/ustreamer \
 {% if ustreamer_h264_sink_rm %}
   --h264-sink-rm \
 {% endif %}
+{% if ustreamer_h264_bitrate %}
+  --h264-bitrate {{ ustreamer_h264_bitrate }} \
+{% endif %}
   && :
 # This last line is just to end the multi-line command because the line
 # before is ending with backslash and so expects to be continued.
