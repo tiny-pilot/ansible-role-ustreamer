@@ -78,9 +78,6 @@ ustreamer_edid: |
 # Location to store EDID files.
 ustreamer_edids_dir: /home/{{ ustreamer_user }}/edids
 
-# Compile the uStreamer plugin for Janus WebRTC Server.
-ustreamer_compile_janus_plugin: no
-
 # For versions of uStreamer prior to 5.0, H264 sink options are only available
 # when OpenMax IL hardware acceleration is enabled via the dynamically defined
 # ustreamer_compile_omx variable.
