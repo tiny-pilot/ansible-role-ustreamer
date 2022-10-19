@@ -25,3 +25,4 @@
   service:
     name: janus
     state: restarted
+  when: ustreamer_install_janus
