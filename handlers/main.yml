@@ -20,3 +20,8 @@
   systemd:
     name: load-tc358743-edid
     enabled: yes
+
+- name: restart janus service
+  service:
+    name: janus
+    state: restarted
