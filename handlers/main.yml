@@ -21,7 +21,7 @@
     name: load-tc358743-edid
     enabled: yes
 
-- name: restart janus service
+- name: restart Janus
   service:
     name: janus
     state: restarted

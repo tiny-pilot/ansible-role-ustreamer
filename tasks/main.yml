@@ -169,7 +169,6 @@
       WITH_JANUS: "{{ ustreamer_install_janus | int }}"
   notify:
     - restart uStreamer
-    - restart Janus
   tags:
     - molecule-idempotence-notest
 
@@ -215,7 +214,7 @@
     src: janus.plugin.ustreamer.jcfg.j2
     dest: "{{ ustreamer_janus_install_dir }}/etc/janus/janus.plugin.ustreamer.jcfg"
   notify:
-    - restart janus service
+    - restart Janus
   tags:
     - janus
   when: ustreamer_install_janus
@@ -228,7 +227,7 @@
     src: "{{ ustreamer_dir }}/janus/libjanus_ustreamer.so"
     dest: "{{ ustreamer_janus_install_dir }}/lib/janus/plugins/"
   notify:
-    - restart janus service
+    - restart Janus
   tags:
     - janus
   when: ustreamer_install_janus
