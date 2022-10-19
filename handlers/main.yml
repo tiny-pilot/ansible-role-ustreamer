@@ -8,13 +8,6 @@
     name: ustreamer
     state: restarted
 
-- name: restart Janus
-  when: >-
-    ustreamer_h264_sink != None
-  service:
-    name: janus
-    state: restarted
-
 - name: load TC358743 EDID file
   service:
     name: load-tc358743-edid
