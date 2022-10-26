@@ -1,4 +1,12 @@
 ---
+- debug:
+    var: item
+  loop:
+    - ustreamer_h264_sink
+    - ustreamer_h264_sink_mode
+    - ustreamer_h264_sink_rm
+    - ustreamer_h264_bitrate
+
 - name: check that the H264 variables are in a consistent state
   fail:
     msg: >-
