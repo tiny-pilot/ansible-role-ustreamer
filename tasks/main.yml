@@ -19,10 +19,10 @@
          or ustreamer_h264_bitrate != None)
 
 - debug:
-    msg: ustreamer_h264_sink != None? {{ {{ ustreamer_h264_sink != None }}
+    msg: ustreamer_h264_sink != None? {{ ustreamer_h264_sink != None }}
 
 - debug:
-    msg: ustreamer_h264_sink != ''? {{ {{ ustreamer_h264_sink != '' }}
+    msg: ustreamer_h264_sink != ''? {{ ustreamer_h264_sink != '' }}
 
 - name: determine whether to install Janus
   # When applying video settings changes via the `update-video-settings`
