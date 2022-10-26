@@ -1,6 +1,6 @@
 ---
 - debug:
-    var: item
+    var: "{{ item }}"
   loop:
     - ustreamer_h264_sink
     - ustreamer_h264_sink_mode
