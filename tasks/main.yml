@@ -18,6 +18,12 @@
          or ustreamer_h264_sink_rm != None
          or ustreamer_h264_bitrate != None)
 
+- debug:
+    msg: ustreamer_h264_sink != None? {{ {{ ustreamer_h264_sink != None }}
+
+- debug:
+    msg: ustreamer_h264_sink != ''? {{ {{ ustreamer_h264_sink != '' }}
+
 - name: determine whether to install Janus
   # When applying video settings changes via the `update-video-settings`
   # privileged script, we run this Ansible role with the `--tag systemd-config`
@@ -28,6 +34,9 @@
     - systemd-config
   set_fact:
     ustreamer_install_janus: "{{ ustreamer_h264_sink != None and ustreamer_h264_sink != '' }}"
+
+- debug:
+    var: ustreamer_install_janus
 
 # If the `build uStreamer` step should be run with the `WITH_JANUS` option, we
 # need to install the Janus Debian package beforehand, because it provides
