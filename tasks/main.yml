@@ -19,6 +19,9 @@
     - janus
     - systemd-config
   set_fact:
+    # We use is truthy rather than != None because there's a strange bug where
+    # if a parent role overrides this value with null, this role sees it as an
+    # empty string rather than null. We work around this by checking truthiness.
     ustreamer_install_janus: "{{ ustreamer_h264_sink is truthy }}"
 
 # If the `build uStreamer` step should be run with the `WITH_JANUS` option, we
