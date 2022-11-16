@@ -22,11 +22,18 @@
     ustreamer_install_janus: "{{ ustreamer_h264_sink != None }}"
 
 # If the `build uStreamer` step should be run with the `WITH_JANUS` option, we
-# need to install the Janus Debian package beforehand, because it provides
-# C-headers.
+# need to install the Janus Debian package and its dependencies beforehand,
+# because Janus provides C headers that uStreamer needs for the `WITH_JANUS`
+# build option.
 - name: install Janus Debian package
   apt:
-    deb: "{{ ustreamer_janus_deb_file }}"
+    deb: "{{ item }}"
+  with_items:
+    # Janus requires libnice 0.1.18 or later, which is not currently available
+    # from the Raspbian apt repositories, so we install an explicit libnice
+    # Debian package from URL.
+    - "{{ ustreamer_libnice_deb_file }}"
+    - "{{ ustreamer_janus_deb_file }}"
   tags:
     - janus
   when: ustreamer_install_janus
