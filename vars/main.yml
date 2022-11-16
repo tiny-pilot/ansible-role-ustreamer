@@ -3,6 +3,6 @@
 ustreamer_settings_file: /home/{{ ustreamer_user }}/config.yml
 
 # These variables are only used within this role.
-ustreamer_libnice_deb_file: https://github.com/tiny-pilot/libnice-debian/releases/download/0.1.18-20221116/libnice10_0.1.18-20221116_armhf.deb
+ustreamer_libnice_deb_file: https://github.com/tiny-pilot/libnice-debian/releases/download/0.1.18-202211161620/libnice10_0.1.18-202211161620_armhf.deb
 ustreamer_janus_deb_file: # TODO
 ustreamer_janus_install_dir: /opt/janus
