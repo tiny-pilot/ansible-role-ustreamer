@@ -24,12 +24,51 @@
 # If the `build uStreamer` step should be run with the `WITH_JANUS` option, we
 # need to install the Janus Debian package beforehand, because it provides
 # C-headers.
+- name: add Debian archive apt repository key
+  apt_key:
+    url: https://ftp-master.debian.org/keys/archive-key-10.asc
+    state: present
+
+- name: enable buster-backports apt suite
+  apt_repository:
+    repo: deb http://deb.debian.org/debian buster-backports main
+    state: present
+
 - name: install Janus Debian package
   apt:
-    deb: "{{ ustreamer_janus_deb_file }}"
+    name:
+      - janus
+      - janus-dev
+    default_release: buster-backports
   tags:
     - janus
   when: ustreamer_install_janus
+
+# Allow Janus C header files to be included when compiling third-party plugins.
+# Issue: https://github.com/tiny-pilot/ansible-role-tinypilot/issues/192
+- name: patch Janus plugin.h file to successfully include refcount.h file
+  command: sed -i -e 's|^#include "refcount.h"$|#include "../refcount.h"|g' "/usr/include/janus/plugins/plugin.h"
+  when: ustreamer_install_janus
+
+- name: create Janus config
+  template:
+    src: janus.jcfg.j2
+    dest: "{{ ustreamer_janus_configs_dir }}/janus.jcfg"
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - restart Janus
+
+- name: create Janus websockets transport config
+  template:
+    src: janus.transport.websockets.jcfg.j2
+    dest: "{{ ustreamer_janus_configs_dir }}/janus.transport.websockets.jcfg"
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - restart Janus
 
 - name: create ustreamer group
   group:
@@ -224,7 +263,7 @@
 - name: create uStreamer Janus plugin config
   template:
     src: janus.plugin.ustreamer.jcfg.j2
-    dest: "{{ ustreamer_janus_install_dir }}/etc/janus/janus.plugin.ustreamer.jcfg"
+    dest: "{{ ustreamer_janus_configs_dir }}/janus.plugin.ustreamer.jcfg"
   notify:
     - restart Janus
   tags:
@@ -237,7 +276,7 @@
     # The `build uStreamer` step created and placed the `.so` file in case it
     # had been run with the `WITH_JANUS` option.
     src: "{{ ustreamer_dir }}/janus/libjanus_ustreamer.so"
-    dest: "{{ ustreamer_janus_install_dir }}/lib/janus/plugins/"
+    dest: "{{ ustreamer_janus_plugins_dir }}/"
   notify:
     - restart Janus
   tags:
