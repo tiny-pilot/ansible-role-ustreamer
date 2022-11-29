@@ -1,4 +1,7 @@
 ---
+- name: include distribution-specific vars
+  include_vars: "{{ ansible_distribution }}.yml"
+
 - name: check that the H264 variables are in a consistent state
   fail:
     msg: >-
@@ -10,6 +13,9 @@
          or ustreamer_h264_sink_rm != None
          or ustreamer_h264_bitrate != None)
 
+# If the `build uStreamer` step should be run with the `WITH_JANUS` option, we
+# need to install the Janus Debian package beforehand, because it provides
+# C-headers.
 - name: determine whether to install Janus
   # When applying video settings changes via the `update-video-settings`
   # privileged script, we run this Ansible role with the `--tag systemd-config`
@@ -21,25 +27,52 @@
   set_fact:
     ustreamer_install_janus: "{{ ustreamer_h264_sink != None }}"
 
-# If the `build uStreamer` step should be run with the `WITH_JANUS` option, we
-# need to install the Janus Debian package beforehand, because it provides
-# C-headers.
+# To determine the correct path for Janus plugins, transports, and loggers we
+# need to determine the base multi-arch library path for the target machine.
+# https://wiki.osdev.org/Target_Triplet
+- name: get compiler target triplet (i.e., machine-vendor-operatingsystem)
+  shell: gcc -dumpmachine
+  register: ustreamer_multiarch_target_result
+  tags:
+    - janus
+  when: ustreamer_install_janus
+
+- name: determine multi-arch target directory
+  set_fact:
+    ustreamer_multiarch_target_dir: /usr/lib/{{ ustreamer_multiarch_target_result.stdout }}
+  tags:
+    - janus
+  when: ustreamer_install_janus
+
+- name: Install GPG
+  apt:
+    name: gnupg
+  tags:
+    - janus
+  when: ustreamer_install_janus
+
 - name: add Debian archive apt repository key
   apt_key:
-    url: https://ftp-master.debian.org/keys/archive-key-10.asc
+    url: https://ftp-master.debian.org/keys/archive-key-{{ ansible_distribution_major_version }}.asc
     state: present
+  tags:
+    - janus
+  when: ustreamer_install_janus and ansible_distribution == 'Debian'
 
-- name: enable buster-backports apt suite
+- name: enable Debian {{ ustreamer_janus_apt_suite }} apt suite
   apt_repository:
-    repo: deb http://deb.debian.org/debian buster-backports main
+    repo: deb http://deb.debian.org/debian {{ ustreamer_janus_apt_suite }} main
     state: present
+  tags:
+    - janus
+  when: ustreamer_install_janus and ansible_distribution == 'Debian'
 
-- name: install Janus Debian package
+- name: install Janus {{ ansible_distribution }} package and C header files
   apt:
     name:
       - janus
       - janus-dev
-    default_release: buster-backports
+    default_release: "{{ ustreamer_janus_apt_suite }}"
   tags:
     - janus
   when: ustreamer_install_janus
@@ -47,28 +80,29 @@
 # Allow Janus C header files to be included when compiling third-party plugins.
 # Issue: https://github.com/tiny-pilot/ansible-role-tinypilot/issues/192
 - name: patch Janus plugin.h file to successfully include refcount.h file
-  command: sed -i -e 's|^#include "refcount.h"$|#include "../refcount.h"|g' "/usr/include/janus/plugins/plugin.h"
+  lineinfile:
+    path: /usr/include/janus/plugins/plugin.h
+    regexp: '^#include "refcount\.h"$'
+    line: '#include "../refcount.h"'
+  tags:
+    - janus
   when: ustreamer_install_janus
 
 - name: create Janus config
   template:
-    src: janus.jcfg.j2
-    dest: "{{ ustreamer_janus_configs_dir }}/janus.jcfg"
+    src: "{{ item }}.j2"
+    dest: "{{ ustreamer_janus_configs_dir }}/{{ item }}"
     owner: root
     group: root
     mode: '0644'
+  loop:
+    - janus.jcfg
+    - janus.transport.websockets.jcfg
   notify:
     - restart Janus
-
-- name: create Janus websockets transport config
-  template:
-    src: janus.transport.websockets.jcfg.j2
-    dest: "{{ ustreamer_janus_configs_dir }}/janus.transport.websockets.jcfg"
-    owner: root
-    group: root
-    mode: '0644'
-  notify:
-    - restart Janus
+  tags:
+    - janus
+  when: ustreamer_install_janus
 
 - name: create ustreamer group
   group:
@@ -276,7 +310,7 @@
     # The `build uStreamer` step created and placed the `.so` file in case it
     # had been run with the `WITH_JANUS` option.
     src: "{{ ustreamer_dir }}/janus/libjanus_ustreamer.so"
-    dest: "{{ ustreamer_janus_plugins_dir }}/"
+    dest: "{{ ustreamer_multiarch_target_dir }}/janus/plugins"
   notify:
     - restart Janus
   tags:

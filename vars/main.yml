@@ -4,4 +4,3 @@ ustreamer_settings_file: /home/{{ ustreamer_user }}/config.yml
 
 # These variables are only used within this role.
 ustreamer_janus_configs_dir: /etc/janus
-ustreamer_janus_plugins_dir: /usr/lib/arm-linux-gnueabihf/janus/plugins
