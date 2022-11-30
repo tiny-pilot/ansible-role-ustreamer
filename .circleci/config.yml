@@ -42,9 +42,6 @@ jobs:
           name: Create Python3 virtual environment
           command: python3 -m venv venv
       - run:
-          name: Install system dependencies
-          command: sudo apt-get install lsb-release --yes
-      - run:
           name: Test role with molecule
           command: |
             . venv/bin/activate && \
