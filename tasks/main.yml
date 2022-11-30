@@ -33,6 +33,7 @@
 - name: get compiler target triplet (i.e., machine-vendor-operatingsystem)
   shell: gcc -dumpmachine
   register: ustreamer_multiarch_target_result
+  changed_when: false
   tags:
     - janus
   when: ustreamer_install_janus
