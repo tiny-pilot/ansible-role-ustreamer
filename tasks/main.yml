@@ -52,6 +52,13 @@
     - janus
   when: ustreamer_install_janus
 
+- name: detect OS
+  set_fact:
+    ustreamer_is_os_raspbian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Raspbian' }}"
+    ustreamer_is_os_debian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Debian' }}"
+  tags:
+    - janus
+
 - name: add archive apt repository key
   apt_key:
     url: https://ftp-master.debian.org/keys/archive-key-{{ ansible_distribution_major_version }}.asc
@@ -141,14 +148,11 @@
   import_tasks: check_saved_settings.yml
   when: ustreamer_settings_file_result.stat.exists | bool
 
-- name: check if OS is Raspberry Pi OS
-  set_fact:
-    ustreamer_is_os_raspbian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Raspbian' }}"
-    ustreamer_is_os_debian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Debian' }}"
-
 - name: check if OS supports OpenMAX IL acceleration (OMX)
   set_fact:
-    ustreamer_os_supports_omx: "{{ ustreamer_is_os_raspbian and ((ansible_distribution_major_version | int) <= 10) }}"
+    ustreamer_os_supports_omx: >-
+      {{ (ustreamer_is_os_raspbian or ustreamer_is_os_debian)
+         and ((ansible_distribution_major_version | int) <= 10) }}
 
 - name: configure TC358743 HDMI capture chip
   import_tasks: provision_tc358743.yml
