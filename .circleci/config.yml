@@ -43,7 +43,7 @@ jobs:
           command: python3 -m venv venv
       - run:
           name: Install system dependencies
-          command: apt-get install lsb-release --yes
+          command: sudo apt-get install lsb-release --yes
       - run:
           name: Test role with molecule
           command: |
