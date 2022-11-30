@@ -150,9 +150,7 @@
 
 - name: check if OS supports OpenMAX IL acceleration (OMX)
   set_fact:
-    ustreamer_os_supports_omx: >-
-      {{ (ustreamer_is_os_raspbian or ustreamer_is_os_debian)
-         and ((ansible_distribution_major_version | int) <= 10) }}
+    ustreamer_os_supports_omx: "{{ ustreamer_is_os_raspbian and ((ansible_distribution_major_version | int) <= 10) }}"
 
 - name: configure TC358743 HDMI capture chip
   import_tasks: provision_tc358743.yml
