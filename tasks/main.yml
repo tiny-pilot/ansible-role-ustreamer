@@ -139,6 +139,7 @@
 - name: check if OS is Raspberry Pi OS
   set_fact:
     ustreamer_is_os_raspbian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Raspbian' }}"
+    ustreamer_is_os_debian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Debian' }}"
 
 - name: check if OS supports OpenMAX IL acceleration (OMX)
   set_fact:
@@ -177,12 +178,12 @@
     ustreamer_packages: "{{ ustreamer_packages }} + ['libjpeg9-dev']"
   when: ustreamer_is_os_raspbian
 
-- name: collect Raspberry Pi OS specific required apt packages for audio
+- name: collect Raspberry Pi OS & Debian specific required apt packages for audio
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libasound2-dev', 'libspeex-dev', 'libspeexdsp-dev', 'libopus-dev']"
   # Audio support is only possible in Raspbian 11 or higher, as audio was added
   # in uStreamer 5.x, which requires Raspbian 11.
-  when: ustreamer_is_os_raspbian and ustreamer_install_janus and ((ansible_distribution_major_version | int) >= 11)
+  when: (ustreamer_is_os_raspbian and ustreamer_install_janus and ((ansible_distribution_major_version | int) >= 11)) or ustreamer_is_os_debian
 
 - name: install libraspberrypi-dev if we're using OpenMax IL acceleration
   set_fact:
@@ -192,7 +193,7 @@
 - name: collect Debian-specific required apt packages
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libjpeg62-turbo-dev']"
-  when: ansible_distribution == 'Debian' and not ustreamer_is_os_raspbian
+  when: ustreamer_is_os_debian
 
 - name: collect Ubuntu-specific required apt packages
   set_fact:
