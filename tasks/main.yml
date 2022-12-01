@@ -79,7 +79,7 @@
     ustreamer_install_janus
     and (ustreamer_is_os_raspbian or ustreamer_is_os_debian)
 
-- name: install Janus {{ ansible_distribution }} package and C header files
+- name: install Janus package and C header files
   apt:
     name:
       - janus
