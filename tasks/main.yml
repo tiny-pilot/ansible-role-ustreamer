@@ -193,8 +193,8 @@
   # use audio on Debian 10, but for simplicity, we assume only Raspbian/Debian
   # 11 wants to use audio features.
   when: >-
-    (ustreamer_is_os_raspbian or ustreamer_is_os_debian)
-    and ustreamer_install_janus
+    ustreamer_install_janus
+    and (ustreamer_is_os_raspbian or ustreamer_is_os_debian)
     and ((ansible_distribution_major_version | int) >= 11)
 
 - name: install libraspberrypi-dev if we're using OpenMax IL acceleration
