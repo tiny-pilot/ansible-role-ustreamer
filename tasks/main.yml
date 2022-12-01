@@ -100,7 +100,7 @@
     - janus
   when: ustreamer_install_janus
 
-- name: create Janus config
+- name: create Janus config files
   template:
     src: "{{ item }}.j2"
     dest: "{{ ustreamer_janus_configs_dir }}/{{ item }}"
