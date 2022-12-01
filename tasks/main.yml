@@ -188,8 +188,10 @@
 - name: collect Raspberry Pi OS and Debian specific required apt packages for audio
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libasound2-dev', 'libspeex-dev', 'libspeexdsp-dev', 'libopus-dev']"
-  # Audio support is only possible in Raspbian/Debian 11 or higher, as audio was
-  # added in uStreamer 5.x, which requires Raspbian/Debian 11.
+  # Audio support is only possible in Raspbian 11 or higher, as audio was added
+  # in uStreamer 5.x, which requires Raspbian 11. Technically, it's possible to
+  # use audio on Debian 10, but for simplicity, we assume only Raspbian/Debian
+  # 11 wants to use audio features.
   when: >-
     (ustreamer_is_os_raspbian or ustreamer_is_os_debian)
     and ustreamer_install_janus
