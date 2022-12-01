@@ -22,7 +22,6 @@
   # option. That triggers the `restart Janus` handler down the line, which
   # relies on the `ustreamer_install_janus` variable being set.
   tags:
-    - janus
     - systemd-config
   set_fact:
     ustreamer_install_janus: "{{ ustreamer_h264_sink != None }}"
@@ -31,13 +30,9 @@
   set_fact:
     ustreamer_is_os_raspbian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Raspbian' }}"
     ustreamer_is_os_debian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Debian' }}"
-  tags:
-    - janus
 
 - name: install Janus
   include_tasks: install_janus.yml
-  tags:
-    - janus
   when: ustreamer_install_janus
 
 - name: create ustreamer group
@@ -237,8 +232,6 @@
     dest: "{{ ustreamer_janus_configs_dir }}/janus.plugin.ustreamer.jcfg"
   notify:
     - restart Janus
-  tags:
-    - janus
   when: ustreamer_install_janus
 
 - name: install uStreamer Janus plugin
@@ -250,6 +243,4 @@
     dest: "{{ ustreamer_janus_plugins_dir }}"
   notify:
     - restart Janus
-  tags:
-    - janus
   when: ustreamer_install_janus
