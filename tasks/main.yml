@@ -40,7 +40,7 @@
 
 - name: determine multi-arch target directory
   set_fact:
-    ustreamer_multiarch_target_dir: /usr/lib/{{ ustreamer_multiarch_target_result.stdout }}
+    ustreamer_janus_plugins_dir: /usr/lib/{{ ustreamer_multiarch_target_result.stdout }}/janus/plugins
   tags:
     - janus
   when: ustreamer_install_janus
@@ -321,7 +321,7 @@
     # The `build uStreamer` step created and placed the `.so` file in case it
     # had been run with the `WITH_JANUS` option.
     src: "{{ ustreamer_dir }}/janus/libjanus_ustreamer.so"
-    dest: "{{ ustreamer_multiarch_target_dir }}/janus/plugins"
+    dest: "{{ ustreamer_janus_plugins_dir }}"
   notify:
     - restart Janus
   tags:
