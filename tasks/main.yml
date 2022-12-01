@@ -185,7 +185,7 @@
     ustreamer_packages: "{{ ustreamer_packages }} + ['libjpeg9-dev']"
   when: ustreamer_is_os_raspbian
 
-- name: collect Raspberry Pi OS & Debian specific required apt packages for audio
+- name: collect Raspberry Pi OS and Debian specific required apt packages for audio
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libasound2-dev', 'libspeex-dev', 'libspeexdsp-dev', 'libopus-dev']"
   # Audio support is only possible in Raspbian/Debian 11 or higher, as audio was
@@ -247,8 +247,8 @@
     # Issue: https://github.com/tiny-pilot/tinypilot/issues/963
     - molecule-idempotence-notest
 
-# We always need to clean & build uStreamer to ensure that the uStreamer service
-# is in sync with its dependencies installed on the device.
+# We always need to clean and build uStreamer to ensure that the uStreamer
+# service is in sync with its dependencies installed on the device.
 # Issue: https://github.com/tiny-pilot/ansible-role-tinypilot/issues/174
 - name: clean uStreamer repository
   make:
