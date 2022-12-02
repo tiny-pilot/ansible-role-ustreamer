@@ -111,8 +111,9 @@
   # audio was added in uStreamer 5.x, which requires Raspbian 11.
   when: >-
     ustreamer_install_janus
-    and ustreamer_is_os_raspbian
-    and ((ansible_distribution_major_version | int) <= 10)
+    and not (
+      ustreamer_is_os_raspbian
+      and ((ansible_distribution_major_version | int) <= 10))
 
 - name: install libraspberrypi-dev if we're using OpenMax IL acceleration
   set_fact:
