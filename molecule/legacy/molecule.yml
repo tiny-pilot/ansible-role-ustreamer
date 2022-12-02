@@ -26,7 +26,7 @@ platforms:
     privileged: true
     pre_build_image: true
   - name: ubuntu20
-    image: geerlingguy/docker-ubuntu1804-ansible
+    image: geerlingguy/docker-ubuntu2004-ansible
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
