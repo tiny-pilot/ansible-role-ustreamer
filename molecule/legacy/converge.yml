@@ -20,3 +20,8 @@
         name: "ansible-role-ustreamer"
       vars:
         ustreamer_repo_version: "v4.13"
+        # Assigning `ustreamer_h264_sink` will exercise the role tasks related
+        # to installing and configuring the Janus WebRTC server.
+        ustreamer_h264_sink: tinypilot::ustreamer::h264
+        ustreamer_h264_sink_mode: 777
+        ustreamer_h264_sink_rm: yes
