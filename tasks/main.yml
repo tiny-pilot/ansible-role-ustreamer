@@ -1,4 +1,7 @@
 ---
+- name: include distribution-specific vars
+  include_vars: "{{ ansible_distribution }}.yml"
+
 - name: check that the H264 variables are in a consistent state
   fail:
     msg: >-
@@ -10,25 +13,26 @@
          or ustreamer_h264_sink_rm != None
          or ustreamer_h264_bitrate != None)
 
+# If the `build uStreamer` step should be run with the `WITH_JANUS` option, we
+# need to install the Janus Debian package beforehand, because it provides
+# C-headers.
 - name: determine whether to install Janus
   # When applying video settings changes via the `update-video-settings`
   # privileged script, we run this Ansible role with the `--tag systemd-config`
   # option. That triggers the `restart Janus` handler down the line, which
   # relies on the `ustreamer_install_janus` variable being set.
   tags:
-    - janus
     - systemd-config
   set_fact:
     ustreamer_install_janus: "{{ ustreamer_h264_sink != None }}"
 
-# If the `build uStreamer` step should be run with the `WITH_JANUS` option, we
-# need to install the Janus Debian package beforehand, because it provides
-# C-headers.
-- name: install Janus Debian package
-  apt:
-    deb: "{{ ustreamer_janus_deb_file }}"
-  tags:
-    - janus
+- name: detect OS
+  set_fact:
+    ustreamer_is_os_raspbian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Raspbian' }}"
+    ustreamer_is_os_debian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Debian' }}"
+
+- name: install Janus
+  include_tasks: install_janus.yml
   when: ustreamer_install_janus
 
 - name: create ustreamer group
@@ -62,10 +66,6 @@
 - name: read saved settings
   import_tasks: check_saved_settings.yml
   when: ustreamer_settings_file_result.stat.exists | bool
-
-- name: check if OS is Raspberry Pi OS
-  set_fact:
-    ustreamer_is_os_raspbian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Raspbian' }}"
 
 - name: check if OS supports OpenMAX IL acceleration (OMX)
   set_fact:
@@ -104,12 +104,17 @@
     ustreamer_packages: "{{ ustreamer_packages }} + ['libjpeg9-dev']"
   when: ustreamer_is_os_raspbian
 
-- name: collect Raspberry Pi OS specific required apt packages for audio
+- name: collect Raspberry Pi OS and Debian specific required apt packages for audio
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libasound2-dev', 'libspeex-dev', 'libspeexdsp-dev', 'libopus-dev']"
   # Audio support is only possible in Raspbian 11 or higher, as audio was added
-  # in uStreamer 5.x, which requires Raspbian 11.
-  when: ustreamer_is_os_raspbian and ustreamer_install_janus and ((ansible_distribution_major_version | int) >= 11)
+  # in uStreamer 5.x, which requires Raspbian 11. Technically, it's possible to
+  # use audio on Debian 10, but for simplicity, we assume only Raspbian/Debian
+  # 11 wants to use audio features.
+  when: >-
+    ustreamer_install_janus
+    and (ustreamer_is_os_raspbian or ustreamer_is_os_debian)
+    and ((ansible_distribution_major_version | int) >= 11)
 
 - name: install libraspberrypi-dev if we're using OpenMax IL acceleration
   set_fact:
@@ -119,7 +124,7 @@
 - name: collect Debian-specific required apt packages
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libjpeg62-turbo-dev']"
-  when: ansible_distribution == 'Debian' and not ustreamer_is_os_raspbian
+  when: ustreamer_is_os_debian
 
 - name: collect Ubuntu-specific required apt packages
   set_fact:
@@ -163,8 +168,8 @@
     # Issue: https://github.com/tiny-pilot/tinypilot/issues/963
     - molecule-idempotence-notest
 
-# We always need to clean & build uStreamer to ensure that the uStreamer service
-# is in sync with its dependencies installed on the device.
+# We always need to clean and build uStreamer to ensure that the uStreamer
+# service is in sync with its dependencies installed on the device.
 # Issue: https://github.com/tiny-pilot/ansible-role-tinypilot/issues/174
 - name: clean uStreamer repository
   make:
@@ -224,11 +229,9 @@
 - name: create uStreamer Janus plugin config
   template:
     src: janus.plugin.ustreamer.jcfg.j2
-    dest: "{{ ustreamer_janus_install_dir }}/etc/janus/janus.plugin.ustreamer.jcfg"
+    dest: "{{ ustreamer_janus_configs_dir }}/janus.plugin.ustreamer.jcfg"
   notify:
     - restart Janus
-  tags:
-    - janus
   when: ustreamer_install_janus
 
 - name: install uStreamer Janus plugin
@@ -237,9 +240,7 @@
     # The `build uStreamer` step created and placed the `.so` file in case it
     # had been run with the `WITH_JANUS` option.
     src: "{{ ustreamer_dir }}/janus/libjanus_ustreamer.so"
-    dest: "{{ ustreamer_janus_install_dir }}/lib/janus/plugins/"
+    dest: "{{ ustreamer_janus_plugins_dir }}"
   notify:
     - restart Janus
-  tags:
-    - janus
   when: ustreamer_install_janus

@@ -3,5 +3,4 @@
 ustreamer_settings_file: /home/{{ ustreamer_user }}/config.yml
 
 # These variables are only used within this role.
-ustreamer_janus_deb_file: https://github.com/tiny-pilot/janus-debian/releases/download/1.0.1-20221104/janus_1.0.1-20221104_armhf.deb
-ustreamer_janus_install_dir: /opt/janus
+ustreamer_janus_configs_dir: /etc/janus
