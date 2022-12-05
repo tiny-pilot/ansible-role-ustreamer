@@ -3,6 +3,7 @@
   shell: dpkg-query --show --showformat='${Maintainer}' janus | grep TinyPilot
   register: ustreamer_is_legacy_janus_installed
   ignore_errors: yes
+  changed_when: false
 
 - name: determine if legacy Janus package is installed
   set_fact:
