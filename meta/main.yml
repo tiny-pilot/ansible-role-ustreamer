@@ -14,7 +14,7 @@
           - bullseye
       - name: Ubuntu
         versions:
-          - groovy
+          - jammy
 
     galaxy_tags:
       - raspberrypi
