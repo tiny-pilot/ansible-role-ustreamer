@@ -1,2 +1,2 @@
 ---
-ustreamer_janus_apt_suite: stable
+ustreamer_janus_apt_suite: "{{ ansible_distribution_release }}"
