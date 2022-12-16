@@ -12,3 +12,10 @@
     line: "dtoverlay=tc358743"
     state: absent
   when: boot_config_exists | bool
+
+- name: disable TC358743-audio overlay in /boot/config.txt
+  lineinfile:
+    path: /boot/config.txt
+    line: "dtoverlay=tc358743-audio"
+    state: absent
+  when: boot_config_exists | bool
