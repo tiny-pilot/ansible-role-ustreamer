@@ -15,15 +15,9 @@
     state: absent
   when: ustreamer_is_legacy_janus_installed
 
-- name: install apt_key dependency
+- name: install archive apt repository key
   apt:
-    name: gnupg
-
-- name: add archive apt repository key
-  apt_key:
-    url: https://ftp-master.debian.org/keys/archive-key-{{ ansible_distribution_major_version }}.asc
-    state: present
-  when: ustreamer_is_os_raspbian or ustreamer_is_os_debian
+    name: debian-archive-keyring
 
 - name: enable Janus apt suite
   apt_repository:
