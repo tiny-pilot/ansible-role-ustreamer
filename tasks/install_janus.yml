@@ -18,6 +18,8 @@
 - name: install archive apt repository key
   apt:
     name: debian-archive-keyring
+    state: present
+  when: ustreamer_is_os_raspbian or ustreamer_is_os_debian
 
 - name: enable Janus apt suite
   apt_repository:
