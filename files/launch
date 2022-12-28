@@ -17,6 +17,7 @@ append_arg_and_value_if_defined() {
   local yaml_path="$1"
   local flag="$2"
 
+  # shellcheck disable=SC2155,SC2086,SC2002 # DEBUG
   local yaml_value="$(cat ${YAML_SOURCES[*]} | yq "${yaml_path}")"
   if [[ "${yaml_value}" != 'null' ]]; then
     USTREAMER_ARGS+=("${flag}")
@@ -28,6 +29,7 @@ append_arg_if_defined() {
   local yaml_path="$1"
   local flag="$2"
 
+  # shellcheck disable=SC2155,SC2086,SC2002 # DEBUG
   local yaml_value="$(cat ${YAML_SOURCES[*]} | yq "${yaml_path}")"
   if [[ "${yaml_value}" != 'null' ]]; then
     USTREAMER_ARGS+=("${flag}")
@@ -55,4 +57,5 @@ append_arg_and_value_if_defined '.ustreamer_h264_sink_mode'   '--h264-sink-mode'
 append_arg_if_defined           '.ustreamer_h264_sink_rm'     '--h264-sink-rm'
 append_arg_and_value_if_defined '.ustreamer_h264_bitrate'     '--h264-bitrate'
 
+# shellcheck disable=SC2086 # DEBUG
 /opt/ustreamer/ustreamer ${USTREAMER_ARGS[*]}
