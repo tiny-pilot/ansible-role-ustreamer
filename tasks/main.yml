@@ -9,7 +9,7 @@
 
 - name: collect non-null runtime variables
   set_fact:
-    ustreamer_runtime_vars: "{{ ustreamer_runtime_vars | combine(item, lookup('ansible.builtin.vars', item)) }}"
+    ustreamer_runtime_vars: "{{ ustreamer_runtime_vars | combine({ item: lookup('ansible.builtin.vars', item) }) }}"
   when: lookup('ansible.builtin.vars', item) != None
   loop:
     - ustreamer_interface
