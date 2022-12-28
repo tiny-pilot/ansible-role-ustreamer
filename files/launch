@@ -18,7 +18,7 @@ append_arg_and_value_if_defined() {
   local flag="$2"
 
   # shellcheck disable=SC2155,SC2086,SC2002 # DEBUG
-  local yaml_value="$(cat ${YAML_SOURCES[*]} | yq "${yaml_path}")"
+  local yaml_value="$(cat /opt/ustreamer-launcher/configs.d/* | yq "${yaml_path}")"
   if [[ "${yaml_value}" != 'null' ]]; then
     USTREAMER_ARGS+=("${flag}")
     USTREAMER_ARGS+=("${yaml_value}")
@@ -30,7 +30,7 @@ append_arg_if_defined() {
   local flag="$2"
 
   # shellcheck disable=SC2155,SC2086,SC2002 # DEBUG
-  local yaml_value="$(cat ${YAML_SOURCES[*]} | yq "${yaml_path}")"
+  local yaml_value="$(cat /opt/ustreamer-launcher/configs.d/* | yq "${yaml_path}")"
   if [[ "${yaml_value}" != 'null' ]]; then
     USTREAMER_ARGS+=("${flag}")
   fi

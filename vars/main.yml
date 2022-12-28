@@ -13,3 +13,5 @@ ustreamer_yq_version: v4.30.6
 
 ustreamer_launcher_dir: /opt/ustreamer-launcher
 ustreamer_launcher_script: /opt/ustreamer-launcher/launch
+
+ustreamer_launcher_configs_dir: "{{ ustreamer_launcher_dir }}/configs.d"

@@ -2,46 +2,6 @@
 - name: include distribution-specific vars
   include_vars: "{{ ansible_distribution }}.yml"
 
-# DEBUG
-- name: create runtime variables dictionary
-  set_fact:
-    ustreamer_runtime_vars: {}
-
-- name: collect non-null runtime variables
-  set_fact:
-    ustreamer_runtime_vars: "{{ ustreamer_runtime_vars | combine({ item: lookup('ansible.builtin.vars', item) }) }}"
-  when: lookup('ansible.builtin.vars', item) != None
-  loop:
-    - ustreamer_interface
-    - ustreamer_port
-    - ustreamer_video_path
-    - ustreamer_encoder
-    - ustreamer_format
-    - ustreamer_resolution
-    - ustreamer_desired_fps
-    - ustreamer_workers
-    - ustreamer_quality
-    - ustreamer_brightness
-    - ustreamer_persistent
-    - ustreamer_use_dv_timings
-    - ustreamer_drop_same_frames
-    - ustreamer_tcp_nodelay
-    - ustreamer_h264_sink
-    - ustreamer_h264_sink_mode
-    - ustreamer_h264_sink_rm
-    - ustreamer_h264_bitrate
-
-- debug:
-    var: ustreamer_runtime_vars
-
-- name: to yaml
-  set_fact:
-    ustreamer_runtime_vars_yaml: "{{ ustreamer_runtime_vars | to_nice_yaml(explicit_start=True) }}"
-
-- debug:
-    var: ustreamer_runtime_vars_yaml
-# DEBUG
-
 - name: check that the H264 variables are in a consistent state
   fail:
     msg: >-

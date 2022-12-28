@@ -17,6 +17,53 @@
     owner: "{{ ustreamer_user }}"
     group: "{{ ustreamer_group }}"
 
+- name: create uStreamer launcher configs folder
+  file:
+    path: "{{ ustreamer_launcher_configs_dir }}"
+    state: directory
+    owner: "{{ ustreamer_user }}"
+    group: "{{ ustreamer_group }}"
+
+- name: create runtime variables dictionary
+  set_fact:
+    ustreamer_runtime_vars: {}
+
+- name: collect non-null runtime variables
+  set_fact:
+    ustreamer_runtime_vars: "{{ ustreamer_runtime_vars | combine({ item: lookup('ansible.builtin.vars', item) }) }}"
+  when: lookup('ansible.builtin.vars', item) != None
+  loop:
+    - ustreamer_interface
+    - ustreamer_port
+    - ustreamer_video_path
+    - ustreamer_encoder
+    - ustreamer_format
+    - ustreamer_resolution
+    - ustreamer_desired_fps
+    - ustreamer_workers
+    - ustreamer_quality
+    - ustreamer_brightness
+    - ustreamer_persistent
+    - ustreamer_use_dv_timings
+    - ustreamer_drop_same_frames
+    - ustreamer_tcp_nodelay
+    - ustreamer_h264_sink
+    - ustreamer_h264_sink_mode
+    - ustreamer_h264_sink_rm
+    - ustreamer_h264_bitrate
+
+- name: print uStreamer runtime variables
+  debug:
+    var: ustreamer_runtime_vars
+
+- name: write uStreamer runtime variables to file
+  copy:
+    dest: "{{ ustreamer_launcher_configs_dir }}/000-defaults.yml"
+    content: "{{ ustreamer_runtime_vars | to_nice_yaml(explicit_start=True) }}"
+    owner: "{{ ustreamer_user }}"
+    group: "{{ ustreamer_group }}"
+    mode: '0444'
+
 - name: install uStreamer launcher script
   copy:
     src: launch
