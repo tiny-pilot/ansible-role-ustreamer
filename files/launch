@@ -17,7 +17,7 @@ append_arg_and_value_if_defined() {
   local yaml_path="$1"
   local flag="$2"
 
-  local yaml_value="$(yq "${yaml_path}" "${YAML_SOURCES[*]}")"
+  local yaml_value="$(cat ${YAML_SOURCES[*]} | yq "${yaml_path}")"
   if [[ "${yaml_value}" != 'null' ]]; then
     USTREAMER_ARGS+=("${flag}")
     USTREAMER_ARGS+=("${yaml_value}")
@@ -28,7 +28,7 @@ append_arg_if_defined() {
   local yaml_path="$1"
   local flag="$2"
 
-  local yaml_value="$(yq "${yaml_path}" "${YAML_SOURCES[*]}")"
+  local yaml_value="$(cat ${YAML_SOURCES[*]} | yq "${yaml_path}")"
   if [[ "${yaml_value}" != 'null' ]]; then
     USTREAMER_ARGS+=("${flag}")
   fi
