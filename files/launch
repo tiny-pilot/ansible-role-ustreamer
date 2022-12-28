@@ -55,4 +55,4 @@ append_arg_and_value_if_defined '.ustreamer_h264_sink_mode'   '--h264-sink-mode'
 append_arg_if_defined           '.ustreamer_h264_sink_rm'     '--h264-sink-rm'
 append_arg_and_value_if_defined '.ustreamer_h264_bitrate'     '--h264-bitrate'
 
-/opt/ustreamer ${USTREAMER_ARGS[*]}
+/opt/ustreamer/ustreamer ${USTREAMER_ARGS[*]}
