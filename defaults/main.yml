@@ -94,4 +94,4 @@ ustreamer_h264_sink_rm: null
 # values is [25, 20000]. Defaults to 5000 when not set.
 ustreamer_h264_bitrate: null
 
-ustreamer_launcher_settings: null
+ustreamer_launcher_settings: []
