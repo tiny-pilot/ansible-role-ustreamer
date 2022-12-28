@@ -107,7 +107,6 @@
       - libevent-dev
       - libbsd-dev
       - uuid-dev
-      - yq
 
 - name: collect Raspberry Pi OS specific required apt packages
   set_fact:
