@@ -1,7 +1,4 @@
 ---
-ustreamer_group: ustreamer
-ustreamer_user: ustreamer
-ustreamer_dir: /opt/ustreamer
 ustreamer_repo: https://github.com/pikvm/ustreamer.git
 ustreamer_repo_version: master
 

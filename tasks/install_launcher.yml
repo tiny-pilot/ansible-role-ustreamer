@@ -1,0 +1,27 @@
+
+- name: canonicalize yq binary architecture
+  set_fact:
+    ustreamer_yq_architecture: "{% if ansible_architecture == 'x86_64' %}amd64{% elif ansible_architecture == 'armv7l' %}arm{% ansible_architecture == 'aarch64' %}arm64{% else %}{{ ansible_architecture }}{% endif %}"
+
+- name: install yq
+  get_url:
+    url: "https://github.com/mikefarah/yq/releases/download/{{ ustreamer_yq_version }}/yq_linux_{{ ustreamer_yq_architecture }}"
+    dest: /usr/bin/yq
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: create uStreamer launcher folder
+  file:
+    path: "{{ ustreamer_launcher_dir }}"
+    state: directory
+    owner: "{{ ustreamer_user }}"
+    group: "{{ ustreamer_group }}"
+
+- name: install uStreamer launcher script
+  copy:
+    src: launch
+    dest: "{{ ustreamer_launcher_script }}"
+    owner: "{{ ustreamer_user }}"
+    group: "{{ ustreamer_group }}"
+    mode: '0755'

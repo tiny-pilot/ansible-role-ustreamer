@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Exit build script on first failure.
+set -e
+
+# Echo commands to stdout.
+set -x
+
+# Exit on unset variable.
+set -u
+
+USTREAMER_ARGS=()
+
+readonly YAML_SOURCES=("$@")
+
+append_arg_and_value_if_defined() {
+  local yaml_path="$1"
+  local flag="$2"
+
+  local yaml_value="$(yq "${yaml_path}" "${YAML_SOURCES[*]}")"
+  if [[ "${yaml_value}" != 'null' ]]; then
+    USTREAMER_ARGS+=("${flag}")
+    USTREAMER_ARGS+=("${yaml_value}")
+  fi
+}
+
+append_arg_if_defined() {
+  local yaml_path="$1"
+  local flag="$2"
+
+  local yaml_value="$(yq "${yaml_path}" "${YAML_SOURCES[*]}")"
+  if [[ "${yaml_value}" != 'null' ]]; then
+    USTREAMER_ARGS+=("${flag}")
+  fi
+}
+
+append_arg_and_value_if_defined '.ustreamer_video_path'       '--device'
+append_arg_and_value_if_defined '.ustreamer_interface'        '--host'
+append_arg_and_value_if_defined '.ustreamer_port'             '--port'
+append_arg_and_value_if_defined '.ustreamer_encoder'          '--encoder'
+append_arg_and_value_if_defined '.ustreamer_format'           '--format'
+append_arg_and_value_if_defined '.ustreamer_desired_fps'      '--desired-fps'
+append_arg_and_value_if_defined '.ustreamer_resolution'       '--resolution'
+append_arg_and_value_if_defined '.ustreamer_workers'          '--workers'
+append_arg_and_value_if_defined '.ustreamer_quality'          '--quality'
+append_arg_and_value_if_defined '.ustreamer_drop_same_frames' '--drop-same-frames'
+append_arg_and_value_if_defined '.ustreamer_brightness'       '--brightness'
+
+append_arg_if_defined           '.ustreamer_persistent'       '--persistent'
+append_arg_if_defined           '.ustreamer_use_dv_timings'   '--dv-timings'
+append_arg_if_defined           '.ustreamer_tcp_nodelay'      '--tcp-nodelay'
+
+append_arg_and_value_if_defined '.ustreamer_h264_sink'        '--h264-sink'
+append_arg_and_value_if_defined '.ustreamer_h264_sink_mode'   '--h264-sink-mode'
+append_arg_if_defined           '.ustreamer_h264_sink_rm'     '--h264-sink-rm'
+append_arg_and_value_if_defined '.ustreamer_h264_bitrate'     '--h264-bitrate'
+
+/opt/ustreamer ${USTREAMER_ARGS[*]}
