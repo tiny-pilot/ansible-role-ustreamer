@@ -6,7 +6,7 @@ After=syslog.target network.target
 Type=simple
 User={{ ustreamer_user }}
 WorkingDirectory={{ ustreamer_launcher_dir }}
-ExecStart={{ ustreamer_launcher_dir }}/ustreamer-launcher \
+ExecStart={{ ustreamer_launcher_script }} \
   {{ ustreamer_launcher_settings_files | join(' ') }}
 Restart=always
 
