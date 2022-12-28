@@ -93,6 +93,3 @@ ustreamer_h264_sink_rm: null
 # Set the bitrate in Kb/s for the H264 stream (e.g., 2000). The range of allowed
 # values is [25, 20000]. Defaults to 5000 when not set.
 ustreamer_h264_bitrate: null
-
-ustreamer_launcher_settings_files:
-  - "{{ ustreamer_settings_file }}"

@@ -11,8 +11,6 @@ set -u
 
 USTREAMER_ARGS=()
 
-readonly YAML_SOURCES=("$@")
-
 append_arg_and_value_if_defined() {
   local yaml_path="$1"
   local flag="$2"
