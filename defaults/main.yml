@@ -95,4 +95,4 @@ ustreamer_h264_sink_rm: null
 ustreamer_h264_bitrate: null
 
 ustreamer_launcher_settings_files:
-  - {{ ustreamer_settings_file }}
+  - "{{ ustreamer_settings_file }}"
