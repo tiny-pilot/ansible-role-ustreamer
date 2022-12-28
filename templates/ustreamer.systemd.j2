@@ -7,7 +7,7 @@ Type=simple
 User={{ ustreamer_user }}
 WorkingDirectory={{ ustreamer_launcher_dir }}
 ExecStart={{ ustreamer_launcher_dir }}/ustreamer-launcher \
-  {{ ustreamer_launcher_settings }}
+  {{ ustreamer_launcher_settings | join(' ') }}
 Restart=always
 
 [Install]
