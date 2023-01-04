@@ -1,5 +1,35 @@
 #!/bin/bash
 
+# Launch uStreamer based on YAML config files.
+#
+# The uStreamer launcher translates YAML config files to command-line flags for
+# uStreamer and then launches uStreamer with those command-line flags.
+#
+# The launcher reads config files in /opt/ustreamer-launcher/configs.d/. The
+# base config file is /opt/ustreamer-launcher/configs.d/000-defaults.yml. Other
+# clients can override the defaults by placing additional files in the configs.d
+# folder like 100-tinypilot.yml.
+#
+# The launcher evaluates YAML files in lexicographic order. In the case of
+# conflicting settings, later config files override earlier files (e.g.,
+# 100-other.yml overrides 000-defaults.yml).
+#
+# Full example:
+#
+#   000-defaults.yml
+#   ---
+#   ustreamer_desired_fps: 30
+#   ustreamer_port: 8123
+#
+#   100-other.yml
+#   ---
+#   ustreamer_desired_fps: 20
+#
+#   Resulting uStreamer command-line:
+#   ustreamer \
+#     --desired-fps 20 \
+#     --port 8123
+
 # Exit build script on first failure.
 set -e
 
