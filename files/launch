@@ -45,8 +45,11 @@ append_arg_and_value_if_defined() {
   local yaml_path="$1"
   local flag="$2"
 
-  # shellcheck disable=SC2155,SC2086,SC2002 # DEBUG
-  local yaml_value="$(cat /opt/ustreamer-launcher/configs.d/* | yq "${yaml_path}")"
+  local yaml_value
+  # Suppress warnings about useless cat and word splitting, as cat makes the
+  # logic clearer, and you can't quote the argument to cat.
+  # shellcheck disable=SC2002,SC2086
+  yaml_value="$(cat /opt/ustreamer-launcher/configs.d/* | yq "${yaml_path}")"
   if [[ "${yaml_value}" != 'null' ]]; then
     USTREAMER_ARGS+=("${flag}")
     USTREAMER_ARGS+=("${yaml_value}")
@@ -57,8 +60,11 @@ append_arg_if_defined() {
   local yaml_path="$1"
   local flag="$2"
 
-  # shellcheck disable=SC2155,SC2086,SC2002 # DEBUG
-  local yaml_value="$(cat /opt/ustreamer-launcher/configs.d/* | yq "${yaml_path}")"
+  local yaml_value
+  # Suppress warnings about useless cat and word splitting, as cat makes the
+  # logic clearer, and you can't quote the argument to cat.
+  # shellcheck disable=SC2002,SC2086
+  yaml_value="$(cat /opt/ustreamer-launcher/configs.d/* | yq "${yaml_path}")"
   if [[ "${yaml_value}" != 'null' ]]; then
     USTREAMER_ARGS+=("${flag}")
   fi
@@ -85,5 +91,4 @@ append_arg_and_value_if_defined '.ustreamer_h264_sink_mode'   '--h264-sink-mode'
 append_arg_if_defined           '.ustreamer_h264_sink_rm'     '--h264-sink-rm'
 append_arg_and_value_if_defined '.ustreamer_h264_bitrate'     '--h264-bitrate'
 
-# shellcheck disable=SC2086 # DEBUG
-/opt/ustreamer/ustreamer ${USTREAMER_ARGS[*]}
+/opt/ustreamer/ustreamer "${USTREAMER_ARGS[@]}"
