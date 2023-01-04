@@ -26,7 +26,6 @@
   set_fact:
     ustreamer_install_janus: "{{ ustreamer_h264_sink != None }}"
 
-
 - name: detect OS
   set_fact:
     ustreamer_is_os_raspbian: "{{ ansible_lsb.id is defined and ansible_lsb.id == 'Raspbian' }}"
