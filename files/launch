@@ -33,14 +33,17 @@
 # Exit build script on first failure.
 set -e
 
-# Echo commands to stdout.
-set -x
-
 # Exit on unset variable.
 set -u
 
 USTREAMER_ARGS=()
 
+# If the given YAML path is defined in the launcher configs, append the
+# associated uStreamer command-line flag and then append the value that the YAML
+# path specifies. For example, if the path is ".ustreamer_desired_fps" and the
+# YAML contains the line:
+#   ustreamer_desired_fps: 25
+# Then, the launcher will append the following args: "--desired-fps" "25"
 append_arg_and_value_if_defined() {
   local yaml_path="$1"
   local flag="$2"
@@ -50,12 +53,18 @@ append_arg_and_value_if_defined() {
   # logic clearer, and you can't quote the argument to cat.
   # shellcheck disable=SC2002,SC2086
   yaml_value="$(cat /opt/ustreamer-launcher/configs.d/* | yq "${yaml_path}")"
-  if [[ "${yaml_value}" != 'null' ]]; then
+  yaml_value_lowercase="${yaml_value,,}"
+  if [[ "${yaml_value_lowercase}" != 'null' ]]; then
     USTREAMER_ARGS+=("${flag}")
     USTREAMER_ARGS+=("${yaml_value}")
   fi
 }
 
+# If the given YAML path is defined in the launcher configs, append the
+# associated uStreamer command-line flag. For example, if the path is
+# ".ustreamer_persistent" and the YAML contains the line:
+#   ustreamer_persistent: true
+# Then, the launcher will append the following arg: "--persistent"
 append_arg_if_defined() {
   local yaml_path="$1"
   local flag="$2"
@@ -65,7 +74,11 @@ append_arg_if_defined() {
   # logic clearer, and you can't quote the argument to cat.
   # shellcheck disable=SC2002,SC2086
   yaml_value="$(cat /opt/ustreamer-launcher/configs.d/* | yq "${yaml_path}")"
-  if [[ "${yaml_value}" != 'null' ]]; then
+  yaml_value_lowercase="${yaml_value,,}"
+  if [[ "${yaml_value_lowercase}" != 'null' ]] && \
+     [[ "${yaml_value_lowercase}" != 'false' ]] && \
+     [[ "${yaml_value_lowercase}" != 'off' ]] && \
+     [[ "${yaml_value_lowercase}" != 'no' ]]; then
     USTREAMER_ARGS+=("${flag}")
   fi
 }
@@ -90,5 +103,9 @@ append_arg_and_value_if_defined '.ustreamer_h264_sink'        '--h264-sink'
 append_arg_and_value_if_defined '.ustreamer_h264_sink_mode'   '--h264-sink-mode'
 append_arg_if_defined           '.ustreamer_h264_sink_rm'     '--h264-sink-rm'
 append_arg_and_value_if_defined '.ustreamer_h264_bitrate'     '--h264-bitrate'
+
+# Echo commands to stdout.
+# We only enable this at the end because there's too much log spew otherwise.
+set -x
 
 /opt/ustreamer/ustreamer "${USTREAMER_ARGS[@]}"
