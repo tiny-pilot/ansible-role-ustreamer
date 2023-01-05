@@ -16,19 +16,15 @@
     group: root
     mode: '0755'
 
-- name: create uStreamer launcher folder
-  file:
-    path: "{{ ustreamer_launcher_dir }}"
+- name: create uStreamer launcher directories
+  template:
+    path: "{{ item }}"
     state: directory
     owner: "{{ ustreamer_user }}"
     group: "{{ ustreamer_group }}"
-
-- name: create uStreamer launcher configs folder
-  file:
-    path: "{{ ustreamer_launcher_configs_dir }}"
-    state: directory
-    owner: "{{ ustreamer_user }}"
-    group: "{{ ustreamer_group }}"
+  loop:
+    - "{{ ustreamer_launcher_dir }}"
+    - "{{ ustreamer_launcher_configs_dir }}"
 
 - name: create runtime variables dictionary
   set_fact:
