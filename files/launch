@@ -40,6 +40,9 @@ USTREAMER_ARGS=()
 
 # Merge together all YAML files, letting lexicographically later files override
 # earlier ones.
+
+# Prevent shellcheck from thinking that $item is a bash variable.
+# shellcheck disable=SC2016
 MERGED_YAML="$(yq eval-all '. as $item ireduce ({}; . * $item )' \
                 /opt/ustreamer-launcher/configs.d/*)"
 
