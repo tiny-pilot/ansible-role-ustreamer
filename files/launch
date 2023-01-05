@@ -40,7 +40,6 @@ USTREAMER_ARGS=()
 
 # Merge together all YAML files, letting lexicographically later files override
 # earlier ones.
-
 # Prevent shellcheck from thinking that $item is a bash variable.
 # shellcheck disable=SC2016
 MERGED_YAML="$(yq eval-all '. as $item ireduce ({}; . * $item )' \
@@ -110,4 +109,4 @@ append_arg_and_value_if_defined '.ustreamer_h264_bitrate'     '--h264-bitrate'
 # We only enable this at the end because there's too much log spew otherwise.
 set -x
 
-/opt/ustreamer/ustreamer "${USTREAMER_ARGS[@]}"
+exec /opt/ustreamer/ustreamer "${USTREAMER_ARGS[@]}"
