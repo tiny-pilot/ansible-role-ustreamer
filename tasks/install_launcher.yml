@@ -21,12 +21,12 @@
     mode: '0755'
 
 - name: create uStreamer launcher directories
-  template:
+  file:
     path: "{{ item }}"
     state: directory
     owner: "{{ ustreamer_user }}"
     group: "{{ ustreamer_group }}"
-  with_items:
+  loop:
     - "{{ ustreamer_launcher_dir }}"
     - "{{ ustreamer_launcher_configs_dir }}"
 
