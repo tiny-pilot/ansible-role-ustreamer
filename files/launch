@@ -44,6 +44,7 @@ USTREAMER_ARGS=()
 # shellcheck disable=SC2016
 MERGED_YAML="$(yq eval-all '. as $item ireduce ({}; . * $item )' \
                 /opt/ustreamer-launcher/configs.d/*)"
+readonly MERGED_YAML
 
 # If the given YAML path is defined in the launcher configs, append the
 # associated uStreamer command-line flag and then append the value that the YAML
@@ -76,10 +77,10 @@ append_arg_if_defined() {
   local yaml_value
   yaml_value="$(echo "${MERGED_YAML}" | yq "${yaml_path}")"
   yaml_value_lowercase="${yaml_value,,}"
-  if [[ "${yaml_value_lowercase}" != 'null' ]] && \
-     [[ "${yaml_value_lowercase}" != 'false' ]] && \
-     [[ "${yaml_value_lowercase}" != 'off' ]] && \
-     [[ "${yaml_value_lowercase}" != 'no' ]]; then
+  if [[ "${yaml_value_lowercase}" == 'true' ]] || \
+     [[ "${yaml_value_lowercase}" == 'on' ]] || \
+     [[ "${yaml_value_lowercase}" == 'yes' ]] || \
+     [[ "${yaml_value_lowercase}" == 'y' ]]; then
     USTREAMER_ARGS+=("${flag}")
   fi
 }

@@ -69,6 +69,8 @@
     owner: "{{ ustreamer_user }}"
     group: "{{ ustreamer_group }}"
     mode: '0444'
+  notify:
+    - restart uStreamer
 
 - name: install uStreamer launcher script
   copy:
@@ -77,3 +79,5 @@
     owner: "{{ ustreamer_user }}"
     group: "{{ ustreamer_group }}"
     mode: '0755'
+  notify:
+    - restart uStreamer
