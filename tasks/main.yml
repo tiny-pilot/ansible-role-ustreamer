@@ -252,3 +252,6 @@
   notify:
     - restart Janus
   when: ustreamer_install_janus
+
+- name: install uStreamer launcher
+  import_tasks: install_launcher.yml

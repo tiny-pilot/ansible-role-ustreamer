@@ -5,65 +5,8 @@ After=syslog.target network.target
 [Service]
 Type=simple
 User={{ ustreamer_user }}
-WorkingDirectory={{ ustreamer_dir }}
-ExecStart={{ ustreamer_dir }}/ustreamer \
-{% if ustreamer_video_path %}
-  --device {{ ustreamer_video_path }} \
-{% endif %}
-{% if ustreamer_interface %}
-  --host {{ ustreamer_interface }} \
-{% endif %}
-{% if ustreamer_port %}
-  --port {{ ustreamer_port }} \
-{% endif %}
-{% if ustreamer_encoder %}
-  --encoder {{ ustreamer_encoder }} \
-{% endif %}
-{% if ustreamer_format %}
-  --format {{ ustreamer_format }} \
-{% endif %}
-{% if ustreamer_desired_fps %}
-  --desired-fps {{ ustreamer_desired_fps }} \
-{% endif %}
-{% if ustreamer_resolution %}
-  --resolution {{ ustreamer_resolution }} \
-{% endif %}
-{% if ustreamer_workers %}
-  --workers {{ ustreamer_workers }} \
-{% endif %}
-{% if ustreamer_quality %}
-  --quality {{ ustreamer_quality }} \
-{% endif %}
-{% if ustreamer_drop_same_frames %}
-  --drop-same-frames {{ ustreamer_drop_same_frames }} \
-{% endif %}
-{% if ustreamer_brightness %}
-  --brightness {{ ustreamer_brightness }} \
-{% endif %}
-{% if ustreamer_persistent %}
-  --persistent \
-{% endif %}
-{% if ustreamer_use_dv_timings %}
-  --dv-timings \
-{% endif %}
-{% if ustreamer_tcp_nodelay %}
-  --tcp-nodelay \
-{% endif %}
-{% if ustreamer_h264_sink %}
-  --h264-sink {{ ustreamer_h264_sink }} \
-{% endif %}
-{% if ustreamer_h264_sink_mode %}
-  --h264-sink-mode {{ ustreamer_h264_sink_mode }} \
-{% endif %}
-{% if ustreamer_h264_sink_rm %}
-  --h264-sink-rm \
-{% endif %}
-{% if ustreamer_h264_bitrate %}
-  --h264-bitrate {{ ustreamer_h264_bitrate }} \
-{% endif %}
-  && :
-# This last line is just to end the multi-line command because the line
-# before is ending with backslash and so expects to be continued.
+WorkingDirectory={{ ustreamer_launcher_dir }}
+ExecStart={{ ustreamer_launcher_script }}
 Restart=always
 
 [Install]
