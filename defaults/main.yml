@@ -71,6 +71,7 @@ ustreamer_edid: |
   00000000000000000000000000000000
   00000000000000000000000000000000
   0000000000000000000000000000006b
+
 # Location to store EDID files.
 ustreamer_edids_dir: /home/{{ ustreamer_user }}/edids
 
