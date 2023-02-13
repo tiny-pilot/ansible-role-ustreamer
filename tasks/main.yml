@@ -17,12 +17,6 @@
 # need to install the Janus Debian package beforehand, because it provides
 # C-headers.
 - name: determine whether to install Janus
-  # When applying video settings changes via the `update-video-settings`
-  # privileged script, we run this Ansible role with the `--tag systemd-config`
-  # option. That triggers the `restart Janus` handler down the line, which
-  # relies on the `ustreamer_install_janus` variable being set.
-  tags:
-    - systemd-config
   set_fact:
     ustreamer_install_janus: "{{ ustreamer_h264_sink != None }}"
 
@@ -218,8 +212,6 @@
     - reload systemd config
     - restart uStreamer
     - restart Janus
-  tags:
-    - systemd-config
 
 - name: enable systemd uStreamer service file
   systemd:
