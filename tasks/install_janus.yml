@@ -34,8 +34,8 @@
 - name: install Janus package and C header files
   apt:
     name:
-      - janus
-      - janus-dev
+      - "janus={{ ustreamer_janus_version }}"
+      - "janus-dev={{ ustreamer_janus_version }}"
     default_release: "{{ ustreamer_janus_apt_suite }}"
 
 # Allow Janus C header files to be included when compiling third-party plugins.
