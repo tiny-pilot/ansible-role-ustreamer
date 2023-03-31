@@ -76,7 +76,7 @@ ustreamer_edid: |
 ustreamer_edids_dir: /home/{{ ustreamer_user }}/edids
 
 # Version of Janus WebRTC server to install.
-ustreamer_janus_version: "1.1.2-1"
+ustreamer_janus_version: "1.1.2"
 
 # For versions of uStreamer prior to 5.0, H264 sink options are only available
 # when OpenMax IL hardware acceleration is enabled via the dynamically defined
