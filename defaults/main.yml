@@ -53,6 +53,13 @@ ustreamer_tcp_nodelay: null
 #   * tc358743 - For HDMI to CSI devices based on the Toshiba TC358743 chip.
 ustreamer_capture_device: null
 
+# To create a new EDID:
+#  1. Convert the existing EDID to binary using "edid2bin".
+#  2. Edit the binary using "AW EDID Editor".
+#  3. Save the new EDID in binary format.
+#  4. Convert the binary EDID to a hex EDID using "make-edid".
+#    - Use the "--yaml" option if required.
+
 # EDID for TC358743 chip.
 ustreamer_edid: |
   00ffffffffffff005262769800888888
