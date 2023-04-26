@@ -17,7 +17,7 @@ set -u
 # Extract the EDID from the inline YAML definition.
 grep "ustreamer_edid:" -A16 defaults/main.yml | \
   `# Strip the line with ustreamer_edid` \
-  tail -n +2 | \
-  `# Strip leading whitespace` \
-  awk '{$1=$1};1' | \
+  tail --lines=+2 | \
+  `# Strip whitespace` \
+  tr --delete "[:blank:]" | \
   edid-decode
