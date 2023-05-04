@@ -37,9 +37,6 @@ jobs:
           name: Decode the EDID
           command: tests/decode-edid
   build:
-    parameters:
-      scenario:
-        type: string
     machine:
       image: ubuntu-2004:202010-01
     resource_class: large
@@ -62,7 +59,7 @@ jobs:
             pip install -r molecule/requirements.txt && \
             ansible --version && \
             molecule --version && \
-            molecule test --scenario-name << parameters.scenario >>
+            molecule test
 workflows:
   version: 2
   all-tests:
@@ -70,7 +67,4 @@ workflows:
       - check_whitespace
       - check_bash
       - decode_edid
-      - build:
-          matrix:
-            parameters:
-              scenario: [legacy, default]
+      - build
