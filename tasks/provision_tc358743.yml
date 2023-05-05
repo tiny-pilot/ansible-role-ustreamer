@@ -66,11 +66,6 @@
     - load TC358743 EDID file
     - configure TC358743 EDID loader to run at boot
 
-- name: default to legacy OpenMAX encoder on Raspbian 10 and earlier
-  set_fact:
-    ustreamer_encoder: "{{ 'omx' if ustreamer_encoder == None else ustreamer_encoder }}"
-  when: ustreamer_is_os_raspbian and ustreamer_os_supports_omx
-
 - name: use custom settings for TC358743 chip for any facts not already defined
   set_fact:
     ustreamer_encoder: "{{ 'm2m-image' if ustreamer_encoder == None else ustreamer_encoder }}"

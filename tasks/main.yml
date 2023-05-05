@@ -28,17 +28,7 @@
 - name: decide whether to support audio streaming
   set_fact:
     # Audio streaming requires Janus because MJPEG can't carry audio.
-    # We exclude audio support from Raspbian Buster (10) because it's
-    # technically possible for a Raspbian Buster system to stream audio with CPU
-    # video encoding, it's unlikely for any clients to want that, and we don't
-    # want to add extra dependencies for audio they won't use. Raspbian Buster
-    # can't do GPU-based (OMX) encoding with audio because uStreamer added audio
-    # support in 5.x, but 5.x dropped support for OMX.
-    ustreamer_enable_audio_streaming: "{{
-      ustreamer_install_janus and not (
-        ustreamer_is_os_raspbian
-        and ((ansible_distribution_major_version | int) <= 10)
-      )}}"
+    ustreamer_enable_audio_streaming: "{{ ustreamer_install_janus }}"
 
 - name: install Janus
   include_tasks: install_janus.yml
@@ -76,10 +66,6 @@
   import_tasks: check_saved_settings.yml
   when: ustreamer_settings_file_result.stat.exists | bool
 
-- name: check if OS supports OpenMAX IL acceleration (OMX)
-  set_fact:
-    ustreamer_os_supports_omx: "{{ ustreamer_is_os_raspbian and ((ansible_distribution_major_version | int) <= 10) }}"
-
 - name: configure TC358743 HDMI capture chip
   import_tasks: provision_tc358743.yml
   when: ustreamer_capture_device == 'tc358743'
@@ -87,17 +73,6 @@
 - name: uninstall TC358743 settings if they're not in use
   import_tasks: remove_tc358743.yml
   when: ustreamer_capture_device != 'tc358743'
-
-- name: enable OpenMax IL acceleration (legacy)
-  set_fact:
-    ustreamer_compile_omx: >-
-      {{ (ustreamer_encoder != None and ustreamer_encoder.lower() == 'omx') or
-          (ustreamer_install_janus and ustreamer_os_supports_omx) }}
-
-- name: check that OpenMax IL acceleration is only compiled on Raspberry Pi OS 10 (Buster) and earlier
-  fail:
-    msg: OpenMax IL acceleration (OMX) is only available on Raspberry Pi OS 10 (Buster) and earlier.
-  when: ustreamer_compile_omx and not ustreamer_os_supports_omx
 
 - name: collect universal required apt packages
   set_fact:
@@ -117,11 +92,6 @@
   set_fact:
     ustreamer_packages: "{{ ustreamer_packages }} + ['libasound2-dev', 'libspeex-dev', 'libspeexdsp-dev', 'libopus-dev']"
   when: ustreamer_install_janus and ustreamer_enable_audio_streaming
-
-- name: install libraspberrypi-dev if we're using OpenMax IL acceleration
-  set_fact:
-    ustreamer_packages: "{{ ustreamer_packages }} + ['libraspberrypi-dev']"
-  when: ustreamer_compile_omx
 
 - name: collect Debian-specific required apt packages
   set_fact:
@@ -184,7 +154,6 @@
   make:
     chdir: "{{ ustreamer_dir }}"
     params:
-      WITH_OMX: "{{ ustreamer_compile_omx | int }}"
       WITH_JANUS: "{{ ustreamer_install_janus | int }}"
   notify:
     - restart uStreamer
