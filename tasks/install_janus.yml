@@ -1,20 +1,4 @@
 ---
-- name: check if legacy Janus package is installed
-  shell: dpkg-query --show --showformat='${Maintainer}' janus | grep TinyPilot
-  register: ustreamer_is_legacy_janus_installed
-  ignore_errors: yes
-  changed_when: false
-
-- name: determine if legacy Janus package is installed
-  set_fact:
-    ustreamer_is_legacy_janus_installed: "{{ ustreamer_is_legacy_janus_installed.stdout != '' }}"
-
-- name: uninstall legacy Janus package
-  apt:
-    name: janus
-    state: absent
-  when: ustreamer_is_legacy_janus_installed
-
 - name: install apt_key dependency
   apt:
     name: gnupg
