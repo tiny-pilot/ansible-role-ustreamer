@@ -20,4 +20,4 @@ grep "ustreamer_edid:" -A16 defaults/main.yml | \
   tail --lines=+2 | \
   `# Strip whitespace` \
   tr --delete "[:blank:]" | \
-  edid-decode
+  edid-decode --check
