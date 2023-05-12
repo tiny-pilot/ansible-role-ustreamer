@@ -55,10 +55,20 @@ ustreamer_capture_device: null
 
 # To create a new EDID:
 #  1. Convert the existing EDID to binary using "edid2bin".
-#  2. Edit the binary using "AW EDID Editor".
+#  2. Edit the binary using "AW EDID Editor v.02.00.13".
 #  3. Save the new EDID in binary format.
 #  4. Convert the binary EDID to a hex EDID using "make-edid".
 #    - Use the "--yaml" option if required.
+
+# Note: You may need to perform a few extra steps in order for the EDID
+# to conform to edid-decode's check - but only if the "Display Range Limits"
+# block changes. This is due to a bug in AW EDID Editor v.02.00.13 that doesn't
+# set the correct bytes.
+# To work around this:
+#  1. Open the new EDID in "AW EDID Editor v.3.0.10".
+#  2. Save the EDID to set correct bytes in the "Display Range Limits" block
+#  3. Re-open the EDID in "AW EDID Editor v.02.00.13" and re-set
+#     the screen size dimensions to 0 (both vertical and horizontal)
 
 # EDID for TC358743 chip.
 ustreamer_edid: |
