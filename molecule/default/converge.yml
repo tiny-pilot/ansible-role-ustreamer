@@ -25,4 +25,3 @@
         ustreamer_h264_sink: tinypilot::ustreamer::h264
         ustreamer_h264_sink_mode: 777
         ustreamer_h264_sink_rm: yes
-        ustreamer_debian_package_path: https://output.circle-artifacts.com/output/job/a3d6246b-bad5-44ae-a972-0a20c7cf1442/artifacts/0/build/linux_amd64/ustreamer_5.38-20230517221849_amd64.deb
